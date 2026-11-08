@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Product, CartItem, Order, UserProfile, ViewType, DepartmentId } from '../types';
 import { PRODUCTS, INITIAL_ORDERS } from '../data/products';
-import { fetchStorefrontProducts, ShopifyStorefrontProduct } from '../lib/shopifyStorefront';
+import { fetchStorefrontProducts, createStorefrontCart, ShopifyStorefrontProduct } from '../lib/shopifyStorefront';
 
 interface ShopContextType {
   currentView: ViewType;
@@ -20,6 +20,7 @@ interface ShopContextType {
   // Cart
   cart: CartItem[];
   addToCart: (item: Omit<CartItem, 'id'>) => void;
+  checkoutWithShopify: () => Promise<void>;
   removeFromCart: (itemId: string) => void;
   updateCartQuantity: (itemId: string, quantity: number) => void;
   clearCart: () => void;
@@ -270,7 +271,7 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const addToCart = (item: Omit<CartItem, 'id'>) => {
-    const itemId = `${item.productId}-${item.size}-${item.color}-${item.isStitched ? 'stitched' : 'unstitched'}`;
+    const itemId = `${item.shopifyVariantId || item.productId}-${item.size}-${item.color}-${item.isStitched ? 'stitched' : 'unstitched'}`;
     setCart((prev) => {
       const existing = prev.find((i) => i.id === itemId);
       if (existing) {
@@ -280,6 +281,31 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
     showToast(`Added "${item.title}" to your shopping bag.`);
     setIsCartDrawerOpen(true);
+  };
+
+  const checkoutWithShopify = async () => {
+    if (cart.length === 0) {
+      showToast('Your shopping bag is empty.', 'info');
+      return;
+    }
+    const lines = cart.map((item) => ({
+      merchandiseId: item.shopifyVariantId || '',
+      quantity: item.quantity,
+    }));
+    if (lines.some((line) => !line.merchandiseId)) {
+      showToast('Some items are still demo products. Please use Shopify-linked products for checkout.', 'error');
+      return;
+    }
+    try {
+      const result = await createStorefrontCart(lines, {
+        email: userProfile.email || undefined,
+        phone: userProfile.phone || undefined,
+        countryCode: 'PK',
+      });
+      window.location.assign(result.checkoutUrl);
+    } catch (error) {
+      showToast(error instanceof Error ? error.message : 'Unable to start Shopify checkout. Please try again.', 'error');
+    }
   };
 
   const removeFromCart = (itemId: string) => {
@@ -388,6 +414,7 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
         cart,
         addToCart,
+        checkoutWithShopify,
         removeFromCart,
         updateCartQuantity,
         clearCart,
