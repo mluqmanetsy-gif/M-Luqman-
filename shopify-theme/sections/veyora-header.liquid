@@ -43,51 +43,47 @@
 
     <nav class="veyora-desktop-nav" aria-label="Main navigation">
       {%- if nav_menu != blank -%}
-        {%- for link in nav_menu.links -%}
-          {%- assign link_label = link.title | downcase -%}
-          <div class="veyora-nav-item{% if link.links != blank %} has-mega-menu{% endif %}">
-            <a class="veyora-nav-link" href="{{ link.url }}">
-              {{ link.title | escape }}
-              {%- if link.links != blank -%}
-                <svg class="veyora-chevron" viewBox="0 0 12 12" aria-hidden="true"><path d="m2 4 4 4 4-4"/></svg>
+        <div class="veyora-nav-item has-mega-menu">
+          <a class="veyora-nav-link" href="{{ routes.collections_url }}">
+            Departments
+            <svg class="veyora-chevron" viewBox="0 0 12 12" aria-hidden="true"><path d="m2 4 4 4 4-4"/></svg>
+          </a>
+          <div class="veyora-mega-menu">
+            <div class="veyora-mega-menu__heading">
+              <span>{{ section.settings.mega_heading | escape }}</span>
+              <a href="{{ routes.all_products_collection_url }}">{{ section.settings.view_catalog_label | escape }} <span aria-hidden="true">→</span></a>
+            </div>
+            <div class="veyora-mega-menu__grid">
+              {%- for child_link in nav_menu.links -%}
+                {%- assign child_title = child_link.title | downcase -%}
+                {%- unless child_title == 'new in' -%}
+                  <div class="veyora-mega-menu__column">
+                    <a class="veyora-mega-menu__column-title" href="{{ child_link.url }}">{{ child_link.title | escape }}</a>
+                    {%- if child_link.links != blank -%}
+                      <ul>
+                        {%- for grandchild_link in child_link.links -%}
+                          <li><a href="{{ grandchild_link.url }}">{{ grandchild_link.title | escape }}</a></li>
+                        {%- endfor -%}
+                      </ul>
+                    {%- endif -%}
+                  </div>
+                {%- endunless -%}
+              {%- endfor -%}
+              {%- if section.settings.feature_image != blank -%}
+                <a class="veyora-mega-feature" href="{{ section.settings.feature_url | default: routes.all_products_collection_url }}">
+                  {{ section.settings.feature_image | image_url: width: 520 | image_tag: loading: 'lazy', widths: '220, 360, 520', alt: section.settings.feature_title }}
+                  <span class="veyora-mega-feature__eyebrow">{{ section.settings.feature_eyebrow | escape }}</span>
+                  <strong>{{ section.settings.feature_title | escape }}</strong>
+                  <span class="veyora-mega-feature__link">{{ section.settings.feature_link_label | escape }} →</span>
+                </a>
               {%- endif -%}
-            </a>
-            {%- if link.links != blank -%}
-              <div class="veyora-mega-menu">
-                <div class="veyora-mega-menu__heading">
-                  <span>{{ section.settings.mega_heading | escape }}</span>
-                  <a href="{{ link.url }}">{{ section.settings.view_catalog_label | escape }} <span aria-hidden="true">→</span></a>
-                </div>
-                <div class="veyora-mega-menu__grid">
-                  {%- for child_link in link.links -%}
-                    <div class="veyora-mega-menu__column">
-                      <a class="veyora-mega-menu__column-title" href="{{ child_link.url }}">{{ child_link.title | escape }}</a>
-                      {%- if child_link.links != blank -%}
-                        <ul>
-                          {%- for grandchild_link in child_link.links -%}
-                            <li><a href="{{ grandchild_link.url }}">{{ grandchild_link.title | escape }}</a></li>
-                          {%- endfor -%}
-                        </ul>
-                      {%- endif -%}
-                    </div>
-                  {%- endfor -%}
-                  {%- if section.settings.feature_image != blank -%}
-                    <a class="veyora-mega-feature" href="{{ section.settings.feature_url | default: routes.all_products_collection_url }}">
-                      {{ section.settings.feature_image | image_url: width: 520 | image_tag: loading: 'lazy', widths: '220, 360, 520', alt: section.settings.feature_title }}
-                      <span class="veyora-mega-feature__eyebrow">{{ section.settings.feature_eyebrow | escape }}</span>
-                      <strong>{{ section.settings.feature_title | escape }}</strong>
-                      <span class="veyora-mega-feature__link">{{ section.settings.feature_link_label | escape }} →</span>
-                    </a>
-                  {%- endif -%}
-                </div>
-                <div class="veyora-mega-menu__footer">
-                  <span>{{ section.settings.mega_footer_left | escape }}</span>
-                  <span>{{ section.settings.mega_footer_right | escape }}</span>
-                </div>
-              </div>
-            {%- endif -%}
+            </div>
+            <div class="veyora-mega-menu__footer">
+              <span>{{ section.settings.mega_footer_left | escape }}</span>
+              <span>{{ section.settings.mega_footer_right | escape }}</span>
+            </div>
           </div>
-        {%- endfor -%}
+        </div>
       {%- endif -%}
       <a class="veyora-nav-link" href="{{ section.settings.new_arrivals_url }}">{{ section.settings.new_arrivals_label | escape }}</a>
       <a class="veyora-nav-link" href="{{ section.settings.bestsellers_url }}">{{ section.settings.bestsellers_label | escape }}</a>
