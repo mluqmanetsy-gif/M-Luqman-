@@ -385,8 +385,8 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
     showToast('Profile information updated.');
   };
 
-  const products = liveProducts.length ? liveProducts : PRODUCTS;
-  const selectedProduct = products.find((p) => p.id === selectedProductId) || PRODUCTS.find((p) => p.id === selectedProductId) || products[0] || PRODUCTS[0];
+  const products = liveProducts;
+  const selectedProduct = products.find((p) => p.id === selectedProductId) || products[0] || null;
 
   return (
     <ShopContext.Provider
