@@ -94,7 +94,7 @@ export const SearchModal: React.FC = () => {
             >
               All Departments
             </button>
-            {DEPARTMENTS.slice(0, 6).map((dept) => (
+            {DEPARTMENTS.map((dept) => (
               <button
                 key={dept.id}
                 onClick={() => setSelectedDeptFilter(dept.id)}

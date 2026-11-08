@@ -84,7 +84,7 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
           productId: 'veyora-cl-01',
           title: 'Zehra — Embroidered Raw Silk Festive Kurta Set',
           price: 28500,
-          image: '/src/assets/images/hero_luxury_couture_1794123004357.jpg',
+          image: '/images/hero_luxury_couture_1794123004357.jpg',
           size: 'S',
           color: 'Ivory Gold',
           isStitched: true,
@@ -269,12 +269,17 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const lookupOrder = (orderId: string, phone?: string): Order | null => {
-    const normalizedId = orderId.trim().toUpperCase();
+    const rawInput = orderId.trim().toUpperCase().replace(/[\s-]/g, '');
     const cleanPhone = phone?.replace(/\D/g, '') || '';
     
     return (
       orders.find((o) => {
-        const matchesId = o.id.toUpperCase() === normalizedId;
+        const orderCleanId = o.id.toUpperCase().replace(/[\s-]/g, '');
+        const matchesId =
+          orderCleanId === rawInput ||
+          orderCleanId.endsWith(rawInput) ||
+          rawInput.endsWith(orderCleanId) ||
+          orderCleanId.replace(/^VY/, '') === rawInput;
         if (!cleanPhone) return matchesId;
         const orderPhoneClean = o.phone.replace(/\D/g, '');
         return matchesId && (orderPhoneClean.includes(cleanPhone) || cleanPhone.includes(orderPhoneClean));

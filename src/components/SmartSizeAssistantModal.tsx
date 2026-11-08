@@ -57,7 +57,8 @@ export const SmartSizeAssistantModal: React.FC = () => {
   const specs = garmentSpecs[recommendedSize];
 
   const handleApplySize = () => {
-    showToast(`Size ${recommendedSize} saved to your fitting profile.`);
+    window.dispatchEvent(new CustomEvent('veyora:apply-size', { detail: recommendedSize }));
+    showToast(`Size ${recommendedSize} saved to your fitting profile & applied.`);
     setIsSizeAssistantOpen(false);
   };
 

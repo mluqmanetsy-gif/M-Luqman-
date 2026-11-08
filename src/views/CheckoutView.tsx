@@ -17,11 +17,11 @@ export const CheckoutView: React.FC = () => {
   const [fullName, setFullName] = useState(userProfile.name);
   const [phone, setPhone] = useState(userProfile.phone);
   const [email, setEmail] = useState(userProfile.email);
-  const [province, setProvince] = useState(userProfile.province || 'Punjab');
-  const [city, setCity] = useState(userProfile.city || 'Lahore');
+  const [province, setProvince] = useState(userProfile.province || 'Sindh');
+  const [city, setCity] = useState(userProfile.city || 'Karachi');
   const [address, setAddress] = useState(userProfile.address);
-  const [landmark, setLandmark] = useState('Near DHA Phase 5 Commercial');
-  const [postalCode, setPostalCode] = useState('54000');
+  const [landmark, setLandmark] = useState('Near Ocean Mall, Clifton');
+  const [postalCode, setPostalCode] = useState('75600');
   const [paymentMethod, setPaymentMethod] = useState<'cod' | 'bank'>('cod');
   const [deliverySpeed, setDeliverySpeed] = useState<'standard' | 'urgent'>('standard');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -64,7 +64,7 @@ export const CheckoutView: React.FC = () => {
         customerName: fullName,
         phone,
         city,
-        address: `${address}${landmark ? ` (Landmark: ${landmark})` : ''}`,
+        address: `${address}${landmark ? ` (Landmark: ${landmark})` : ''}${postalCode ? `, Postal Code: ${postalCode}` : ''}`,
         items: cart,
         subtotal: cartSubtotal,
         shipping: shippingTotal,
@@ -214,7 +214,7 @@ export const CheckoutView: React.FC = () => {
                 required
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
-                placeholder="e.g. House 42-B, Street 7, Phase 5 DHA, Lahore"
+                placeholder="e.g. Apartment 402, Block 4, Clifton, Karachi"
                 className="w-full text-xs border border-[#171513]/20 p-2.5 focus:outline-none focus:border-[#641D32]"
               />
             </div>
@@ -228,7 +228,7 @@ export const CheckoutView: React.FC = () => {
                   type="text"
                   value={landmark}
                   onChange={(e) => setLandmark(e.target.value)}
-                  placeholder="e.g. Near Jalal Sons or DHA Sports Complex"
+                  placeholder="e.g. Near Ocean Mall or Bilawal House"
                   className="w-full text-xs border border-[#171513]/20 p-2.5 focus:outline-none focus:border-[#641D32]"
                 />
               </div>
@@ -241,7 +241,7 @@ export const CheckoutView: React.FC = () => {
                   type="text"
                   value={postalCode}
                   onChange={(e) => setPostalCode(e.target.value)}
-                  placeholder="54000"
+                  placeholder="75600"
                   className="w-full text-xs border border-[#171513]/20 p-2.5 focus:outline-none focus:border-[#641D32]"
                 />
               </div>

@@ -758,7 +758,7 @@ export const INITIAL_ORDERS = [
         productId: 'veyora-cl-01',
         title: 'Zehra — Embroidered Raw Silk Festive Kurta Set',
         price: 28500,
-        image: '/src/assets/images/hero_luxury_couture_1794123004357.jpg',
+        image: '/images/hero_luxury_couture_1794123004357.jpg',
         size: 'M',
         color: 'Ivory Gold',
         isStitched: true,
@@ -788,7 +788,7 @@ export const INITIAL_ORDERS = [
         productId: 'veyora-ft-01',
         title: 'Zarrin — Champagne Gold Embellished Khussa & Velvet Block Heel',
         price: 8500,
-        image: '/src/assets/images/footwear_luxury_shoes_1794124332098.jpg',
+        image: '/images/footwear_luxury_shoes_1794124332098.jpg',
         size: '38 (PK 8)',
         color: 'Champagne Gold',
         quantity: 1

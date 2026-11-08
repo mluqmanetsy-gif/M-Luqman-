@@ -41,6 +41,15 @@ export const AccountView: React.FC = () => {
   const [address, setAddress] = useState(userProfile.address);
   const [province, setProvince] = useState(userProfile.province);
 
+  React.useEffect(() => {
+    setName(userProfile.name);
+    setEmail(userProfile.email);
+    setPhone(userProfile.phone);
+    setCity(userProfile.city);
+    setAddress(userProfile.address);
+    setProvince(userProfile.province);
+  }, [userProfile]);
+
   const handleSaveProfile = (e: React.FormEvent) => {
     e.preventDefault();
     updateUserProfile({

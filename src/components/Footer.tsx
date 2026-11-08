@@ -169,17 +169,7 @@ export const Footer: React.FC = () => {
               Women's Departments
             </h5>
             <ul className="space-y-2.5 text-xs text-[#EEE5DF]/80">
-              {DEPARTMENTS.slice(0, 6).map((dept) => (
-                <li key={dept.id}>
-                  <button
-                    onClick={() => navigateTo('collection', { department: dept.id })}
-                    className="hover:text-white hover:translate-x-1 transition-all"
-                  >
-                    {dept.name}
-                  </button>
-                </li>
-              ))}
-              {DEPARTMENTS.slice(6).map((dept) => (
+              {DEPARTMENTS.map((dept) => (
                 <li key={dept.id}>
                   <button
                     onClick={() => navigateTo('collection', { department: dept.id })}

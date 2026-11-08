@@ -80,6 +80,18 @@ export const ProductView: React.FC = () => {
     setSelectedEnsembleIds([product.id, ...matched.map((p) => p.id)]);
   }, [product.id]);
 
+  // Synchronize size if chosen from Smart Size Assistant
+  useEffect(() => {
+    const handleApplySizeEvent = (e: Event) => {
+      const customEvent = e as CustomEvent<string>;
+      if (customEvent.detail && product.sizes.includes(customEvent.detail)) {
+        setSelectedSize(customEvent.detail);
+      }
+    };
+    window.addEventListener('veyora:apply-size', handleApplySizeEvent);
+    return () => window.removeEventListener('veyora:apply-size', handleApplySizeEvent);
+  }, [product.sizes]);
+
   const toggleEnsembleItem = (id: string) => {
     setSelectedEnsembleIds((prev) =>
       prev.includes(id) ? prev.filter((itemId) => itemId !== id) : [...prev, id]
