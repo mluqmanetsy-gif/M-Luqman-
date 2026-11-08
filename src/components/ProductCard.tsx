@@ -25,6 +25,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     e.stopPropagation();
     addToCart({
       productId: product.id,
+      shopifyVariantId: product.shopifyVariants?.find((variant) => variant.availableForSale)?.id || product.shopifyVariantId,
       title: product.title,
       price: product.price,
       image: product.images[0],
@@ -148,11 +149,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         <div>
           <div className="flex items-center justify-between text-[11px] text-[#171513]/60 uppercase tracking-widest mb-1.5">
             <span>{product.category}</span>
-            <div className="flex items-center gap-1 text-[11px] text-[#B69A70] font-medium">
-              <span>★</span>
-              <span>{product.rating.toFixed(1)}</span>
-              <span className="text-[#171513]/40">({product.reviewCount})</span>
-            </div>
+            {product.reviewCount > 0 && (
+              <div className="flex items-center gap-1 text-[11px] text-[#B69A70] font-medium">
+                <span>★</span>
+                <span>{product.rating.toFixed(1)}</span>
+                <span className="text-[#171513]/40">({product.reviewCount})</span>
+              </div>
+            )}
           </div>
 
           <h3 className="font-serif text-base font-semibold text-[#171513] line-clamp-1 group-hover:text-[#641D32] transition-colors">
@@ -161,12 +164,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
           {/* Stock Status indicator */}
           <div className="mt-1 flex items-center gap-2 text-[10px]">
-            {product.stockCount && product.stockCount < 8 ? (
-              <span className="text-[#641D32] font-medium">
-                Only {product.stockCount} left in Karachi stock
+            {product.isShopifyProduct ? (
+              <span className={product.inStock ? 'text-[#1E3A2F]' : 'text-[#641D32]'}>
+                {product.inStock ? 'Available to order' : 'Currently unavailable'}
               </span>
+            ) : product.stockCount && product.stockCount < 8 ? (
+              <span className="text-[#641D32] font-medium">Limited availability</span>
             ) : (
-              <span className="text-[#171513]/60">In Stock · Ready to dispatch</span>
+              <span className="text-[#171513]/60">Available</span>
             )}
           </div>
         </div>
