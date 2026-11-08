@@ -3,6 +3,7 @@ import { useShop } from '../context/ShopContext';
 import { SAMPLE_REVIEWS } from '../data/products';
 import { DEPARTMENTS } from '../data/departments';
 import { ProductCard } from '../components/ProductCard';
+import { Product } from '../types';
 import {
   ArrowRight,
   Sparkles,
@@ -40,19 +41,18 @@ export const HomeView: React.FC = () => {
   // Tabbed Grid State
   const [activeTab, setActiveTab] = useState<'all' | 'clothing' | 'footwear' | 'bags' | 'jewellery'>('all');
 
-  // Complete the Look Bundle Selection State
-  const mainLookDress = PRODUCTS.find((p) => p.id === 'veyora-cl-01') || PRODUCTS[0];
-  const matchingShoe = PRODUCTS.find((p) => p.id === 'veyora-ft-01') || PRODUCTS[1];
-  const matchingBag = PRODUCTS.find((p) => p.id === 'veyora-bg-01') || PRODUCTS[2];
-  const matchingJewellery = PRODUCTS.find((p) => p.id === 'veyora-jw-01') || PRODUCTS[3];
+  // Complete the Look uses only products loaded from the live Shopify catalog.
+  const lookItems: Product[] = [
+    products.find((p) => p.department === 'clothing'),
+    products.find((p) => p.department === 'footwear'),
+    products.find((p) => p.department === 'bags'),
+    products.find((p) => p.department === 'jewellery')
+  ].filter((item): item is Product => Boolean(item));
+  const [selectedBundleItems, setSelectedBundleItems] = useState<string[]>([]);
 
-  const lookItems = [mainLookDress, matchingShoe, matchingBag, matchingJewellery];
-  const [selectedBundleItems, setSelectedBundleItems] = useState<string[]>([
-    mainLookDress.id,
-    matchingShoe.id,
-    matchingBag.id,
-    matchingJewellery.id
-  ]);
+  useEffect(() => {
+    setSelectedBundleItems(lookItems.map((item) => item.id));
+  }, [products]);
 
   // Newsletter State
   const [newsletterEmail, setNewsletterEmail] = useState('');
@@ -119,7 +119,7 @@ export const HomeView: React.FC = () => {
     .filter((item) => selectedBundleItems.includes(item.id))
     .reduce((sum, item) => sum + item.price, 0);
 
-  const bundleDiscount = selectedBundleItems.length >= 3 ? Math.round(bundleSubtotal * 0.1) : 0;
+  const bundleDiscount = 0;
   const bundleFinalTotal = bundleSubtotal - bundleDiscount;
 
   const toggleBundleItem = (productId: string) => {
@@ -138,6 +138,7 @@ export const HomeView: React.FC = () => {
     itemsToAdd.forEach((item) => {
       addToCart({
         productId: item.id,
+        shopifyVariantId: item.shopifyVariantId,
         title: item.title,
         price: item.price,
         image: item.images[0],
@@ -418,7 +419,7 @@ export const HomeView: React.FC = () => {
             </div>
 
             <span className="text-xs text-[#B69A70] bg-[#B69A70]/10 border border-[#B69A70]/30 px-3 py-1 font-semibold">
-              Save 10% When Bundling 3+ Items
+              Curated Pieces from Our Live Collection
             </span>
           </div>
 
