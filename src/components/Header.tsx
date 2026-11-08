@@ -61,9 +61,9 @@ export const Header: React.FC = () => {
           </div>
 
           <div className="mx-auto md:mx-0 text-center font-medium text-[11px]">
-            <span>Free Standard Delivery Across Pakistan</span>
+            <span>Discover the VEYORA Collection</span>
             <span className="hidden sm:inline mx-2 text-[#B69A70]">·</span>
-            <span className="hidden sm:inline text-[#EEE5DF]">TCS & Leopard Delivery in 2–4 Days</span>
+            
           </div>
 
           <div className="hidden lg:flex items-center gap-4 text-[11px]">
