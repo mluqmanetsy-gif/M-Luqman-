@@ -1,0 +1,308 @@
+{%- liquid
+  assign nav_menu = section.settings.menu
+  assign announcement_text = section.settings.announcement_text
+  assign delivery_text = section.settings.delivery_text
+-%}
+
+<div class="veyora-announcement" role="region" aria-label="Store announcement">
+  <div class="veyora-announcement__inner">
+    <p class="veyora-announcement__cod">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h11v10H3zM14 10h4l3 3v4h-7zM7 20a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm11 0a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/></svg>
+      {{ section.settings.cod_text | escape }}
+    </p>
+    <p class="veyora-announcement__center">
+      <span>{{ announcement_text | escape }}</span>
+      <span class="veyora-announcement__separator">·</span>
+      <span class="veyora-announcement__delivery">{{ delivery_text | escape }}</span>
+    </p>
+    <div class="veyora-announcement__links">
+      <a href="{{ section.settings.tracking_url | default: '/pages/order-tracking' }}">Track Order</a>
+      <span>·</span>
+      <a href="{{ section.settings.whatsapp_url }}" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5a8.5 8.5 0 0 1-12.6 7.4L3 20l1.2-4.2A8.5 8.5 0 1 1 20 11.5Z"/><path d="M8.5 8.2c.2-.5.5-.5.8-.5h.5c.2 0 .4.1.5.4l.7 1.6c.1.2.1.4-.1.6l-.5.6c-.2.2-.2.4 0 .6.4.7 1 1.3 1.7 1.7.2.1.4.1.6-.1l.7-.8c.2-.2.4-.2.6-.1l1.5.7c.3.1.4.3.4.5 0 .4-.2 1-.6 1.3-.4.4-1 .6-1.6.5-1-.1-2.4-.7-3.8-1.9-1.1-1-1.9-2.3-2.1-3.2-.2-.7 0-1.4.7-1.9Z"/></svg>
+        {{ section.settings.whatsapp_label | escape }}
+      </a>
+    </div>
+  </div>
+</div>
+
+<header class="veyora-header" data-veyora-header>
+  <div class="veyora-header__inner">
+    <button class="veyora-icon-button veyora-mobile-menu-trigger" type="button" aria-label="Open menu" aria-controls="veyora-mobile-drawer" aria-expanded="false" data-veyora-open-drawer>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+
+    <a class="veyora-brand" href="{{ routes.root_url }}" aria-label="{{ shop.name | escape }} home">
+      {%- if section.settings.logo != blank -%}
+        {{ section.settings.logo | image_url: width: 420 | image_tag: class: 'veyora-brand__image', widths: '140, 210, 280, 420', alt: shop.name }}
+      {%- else -%}
+        <span class="veyora-brand__wordmark">{{ section.settings.brand_name | escape }}</span>
+        <span class="veyora-brand__tagline">{{ section.settings.brand_tagline | escape }}</span>
+      {%- endif -%}
+    </a>
+
+    <nav class="veyora-desktop-nav" aria-label="Main navigation">
+      {%- if nav_menu != blank -%}
+        {%- for link in nav_menu.links -%}
+          {%- assign link_label = link.title | downcase -%}
+          <div class="veyora-nav-item{% if link.links != blank %} has-mega-menu{% endif %}">
+            <a class="veyora-nav-link" href="{{ link.url }}">
+              {{ link.title | escape }}
+              {%- if link.links != blank -%}
+                <svg class="veyora-chevron" viewBox="0 0 12 12" aria-hidden="true"><path d="m2 4 4 4 4-4"/></svg>
+              {%- endif -%}
+            </a>
+            {%- if link.links != blank -%}
+              <div class="veyora-mega-menu">
+                <div class="veyora-mega-menu__heading">
+                  <span>{{ section.settings.mega_heading | escape }}</span>
+                  <a href="{{ link.url }}">{{ section.settings.view_catalog_label | escape }} <span aria-hidden="true">→</span></a>
+                </div>
+                <div class="veyora-mega-menu__grid">
+                  {%- for child_link in link.links -%}
+                    <div class="veyora-mega-menu__column">
+                      <a class="veyora-mega-menu__column-title" href="{{ child_link.url }}">{{ child_link.title | escape }}</a>
+                      {%- if child_link.links != blank -%}
+                        <ul>
+                          {%- for grandchild_link in child_link.links -%}
+                            <li><a href="{{ grandchild_link.url }}">{{ grandchild_link.title | escape }}</a></li>
+                          {%- endfor -%}
+                        </ul>
+                      {%- endif -%}
+                    </div>
+                  {%- endfor -%}
+                  {%- if section.settings.feature_image != blank -%}
+                    <a class="veyora-mega-feature" href="{{ section.settings.feature_url | default: routes.all_products_collection_url }}">
+                      {{ section.settings.feature_image | image_url: width: 520 | image_tag: loading: 'lazy', widths: '220, 360, 520', alt: section.settings.feature_title }}
+                      <span class="veyora-mega-feature__eyebrow">{{ section.settings.feature_eyebrow | escape }}</span>
+                      <strong>{{ section.settings.feature_title | escape }}</strong>
+                      <span class="veyora-mega-feature__link">{{ section.settings.feature_link_label | escape }} →</span>
+                    </a>
+                  {%- endif -%}
+                </div>
+                <div class="veyora-mega-menu__footer">
+                  <span>{{ section.settings.mega_footer_left | escape }}</span>
+                  <span>{{ section.settings.mega_footer_right | escape }}</span>
+                </div>
+              </div>
+            {%- endif -%}
+          </div>
+        {%- endfor -%}
+      {%- endif -%}
+      <a class="veyora-nav-link" href="{{ section.settings.journal_url }}">Style Journal</a>
+      <a class="veyora-nav-link" href="{{ section.settings.rewards_url }}">Rewards Club</a>
+      <a class="veyora-copilot-link" href="{{ section.settings.copilot_url }}">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2 1.6 6.4L20 10l-6.4 1.6L12 18l-1.6-6.4L4 10l6.4-1.6L12 2ZM19 16l.7 2.3L22 19l-2.3.7L19 22l-.7-2.3L16 19l2.3-.7L19 16Z"/></svg>
+        Fashion Copilot
+      </a>
+    </nav>
+
+    <div class="veyora-header-actions">
+      <a class="veyora-icon-button" href="{{ routes.search_url }}" aria-label="Search">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg>
+      </a>
+      <a class="veyora-icon-button veyora-wishlist-link" href="{{ section.settings.wishlist_url }}" aria-label="Wishlist">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 8.8c0 5.1-8.8 11-8.8 11s-8.8-5.9-8.8-11A4.8 4.8 0 0 1 12 6.2a4.8 4.8 0 0 1 8.8 2.6Z"/></svg>
+      </a>
+      <a class="veyora-account-link" href="{{ routes.account_url }}" aria-label="Customer account">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 21a7.5 7.5 0 0 1 15 0"/></svg>
+        <span>Account</span>
+      </a>
+      <a class="veyora-bag-link" href="{{ routes.cart_url }}" aria-label="Shopping bag, {{ cart.item_count }} items">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l1 13H4L5 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
+        <span>Bag</span>
+        <span class="veyora-bag-count">{{ cart.item_count }}</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<div class="veyora-mobile-drawer" id="veyora-mobile-drawer" aria-hidden="true" data-veyora-drawer>
+  <button class="veyora-drawer-backdrop" type="button" aria-label="Close menu" data-veyora-close-drawer></button>
+  <div class="veyora-drawer-panel" role="dialog" aria-modal="true" aria-label="Mobile navigation">
+    <div class="veyora-drawer-heading">
+      <a class="veyora-brand veyora-brand--drawer" href="{{ routes.root_url }}">
+        <span class="veyora-brand__wordmark">{{ section.settings.brand_name | escape }}</span>
+        <span class="veyora-brand__tagline">{{ section.settings.brand_tagline | escape }}</span>
+      </a>
+      <button class="veyora-icon-button" type="button" aria-label="Close menu" data-veyora-close-drawer>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
+      </button>
+    </div>
+    <a class="veyora-drawer-copilot" href="{{ section.settings.copilot_url }}">✧ &nbsp; Fashion Copilot <span>→</span></a>
+    <div class="veyora-drawer-links">
+      {%- if nav_menu != blank -%}
+        {%- for link in nav_menu.links -%}
+          <details class="veyora-drawer-group">
+            <summary>{{ link.title | escape }} <span>+</span></summary>
+            <div class="veyora-drawer-sublinks">
+              <a href="{{ link.url }}">Shop all {{ link.title | escape }}</a>
+              {%- for child_link in link.links -%}
+                <a href="{{ child_link.url }}">{{ child_link.title | escape }}</a>
+                {%- for grandchild_link in child_link.links -%}
+                  <a class="veyora-drawer-grandchild" href="{{ grandchild_link.url }}">{{ grandchild_link.title | escape }}</a>
+                {%- endfor -%}
+              {%- endfor -%}
+            </div>
+          </details>
+        {%- endfor -%}
+      {%- endif -%}
+      <a href="{{ section.settings.journal_url }}">Style Journal</a>
+      <a href="{{ section.settings.rewards_url }}">Rewards Club & VIP</a>
+      <a href="{{ routes.account_url }}">Customer Account & Orders</a>
+      <a href="{{ section.settings.tracking_url | default: '/pages/order-tracking' }}">Track Order (Pakistan)</a>
+    </div>
+    <div class="veyora-drawer-footer">
+      <p>{{ section.settings.drawer_footer | escape }}</p>
+      <a href="{{ section.settings.whatsapp_url }}" target="_blank" rel="noopener">{{ section.settings.whatsapp_label | escape }}</a>
+    </div>
+  </div>
+</div>
+
+<style>
+  :root {
+    --veyora-ink: #171513;
+    --veyora-ivory: #f6f2ec;
+    --veyora-blush: #eee5df;
+    --veyora-burgundy: #641d32;
+    --veyora-champagne: #b69a70;
+  }
+  .veyora-announcement{background:var(--veyora-ink);color:var(--veyora-ivory);border-bottom:1px solid rgba(182,154,112,.3);font:500 10px/1.4 Jost,Arial,sans-serif;letter-spacing:.11em;text-transform:uppercase}
+  .veyora-announcement__inner{max-width:1440px;margin:auto;padding:9px 28px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+  .veyora-announcement p{margin:0}
+  .veyora-announcement__cod,.veyora-announcement__links,.veyora-announcement__links a{display:flex;align-items:center;gap:8px}
+  .veyora-announcement__cod{color:var(--veyora-champagne);white-space:nowrap}
+  .veyora-announcement svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+  .veyora-announcement__center{text-align:center;letter-spacing:.08em}
+  .veyora-announcement__separator,.veyora-announcement__links>span{color:var(--veyora-champagne);padding:0 5px}
+  .veyora-announcement__delivery{color:#eee5df}
+  .veyora-announcement__links{white-space:nowrap}
+  .veyora-announcement a{color:#eee5df;text-decoration:none}
+  .veyora-announcement a:hover{color:var(--veyora-champagne)}
+  .veyora-header{position:sticky;top:0;z-index:40;background:rgba(246,242,236,.97);backdrop-filter:blur(12px);border-bottom:1px solid rgba(23,21,19,.1)}
+  .veyora-header__inner{max-width:1440px;min-height:80px;margin:auto;padding:12px 28px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+  .veyora-brand{display:flex;flex-direction:column;flex:0 0 auto;color:var(--veyora-ink);text-decoration:none;line-height:1}
+  .veyora-brand__wordmark{font-family:"Cormorant Garamond",Georgia,serif;font-size:36px;font-weight:500;letter-spacing:.2em}
+  .veyora-brand__tagline{margin-top:5px;color:var(--veyora-champagne);font:600 9px/1 Jost,Arial,sans-serif;letter-spacing:.27em;text-transform:uppercase}
+  .veyora-brand__image{display:block;width:auto;max-width:190px;max-height:58px;object-fit:contain}
+  .veyora-desktop-nav{display:flex;align-items:center;justify-content:center;gap:clamp(12px,1.55vw,25px);font:500 13px/1.2 Jost,Arial,sans-serif;color:var(--veyora-ink)}
+  .veyora-nav-item{position:relative}
+  .veyora-nav-link{display:flex;align-items:center;gap:6px;padding:13px 0;color:inherit;text-decoration:none;white-space:nowrap;transition:color .2s}
+  .veyora-nav-link:hover,.veyora-nav-item:focus-within>.veyora-nav-link{color:var(--veyora-burgundy)}
+  .veyora-chevron{width:12px;height:12px;fill:none;stroke:var(--veyora-champagne);stroke-width:1.5;transition:transform .2s}
+  .veyora-nav-item:hover .veyora-chevron{transform:rotate(180deg)}
+  .veyora-mega-menu{display:none;position:absolute;top:100%;left:0;width:min(840px,calc(100vw - 40px));padding:24px;background:#fff;border:1px solid rgba(23,21,19,.1);box-shadow:0 18px 45px rgba(23,21,19,.14);z-index:60}
+  .veyora-nav-item:hover .veyora-mega-menu,.veyora-nav-item:focus-within .veyora-mega-menu{display:block;animation:veyoraFadeIn .2s ease-out}
+  .veyora-mega-menu__heading,.veyora-mega-menu__footer{display:flex;align-items:center;justify-content:space-between;gap:18px}
+  .veyora-mega-menu__heading{padding-bottom:13px;margin-bottom:18px;border-bottom:1px solid rgba(23,21,19,.1);font:italic 500 20px/1.2 "Cormorant Garamond",Georgia,serif}
+  .veyora-mega-menu__heading a,.veyora-mega-menu__column-title,.veyora-mega-menu__footer span:last-child{color:var(--veyora-burgundy)}
+  .veyora-mega-menu__heading a,.veyora-mega-feature__link{font:600 10px/1.4 Jost,Arial,sans-serif;letter-spacing:.1em;text-transform:uppercase;text-decoration:none}
+  .veyora-mega-menu__grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
+  .veyora-mega-menu__column{border-right:1px solid rgba(23,21,19,.1);padding-right:14px}
+  .veyora-mega-menu__column-title{display:block;margin-bottom:10px;font:600 11px/1.4 Jost,Arial,sans-serif;letter-spacing:.08em;text-transform:uppercase;text-decoration:none}
+  .veyora-mega-menu__column ul{list-style:none;margin:0;padding:0;display:grid;gap:7px}
+  .veyora-mega-menu__column li a{font:400 12px/1.4 Jost,Arial,sans-serif;color:rgba(23,21,19,.82);text-decoration:none}
+  .veyora-mega-menu__column li a:hover{color:var(--veyora-burgundy)}
+  .veyora-mega-feature{display:flex;flex-direction:column;gap:6px;padding:10px;background:var(--veyora-ivory);color:var(--veyora-ink);text-decoration:none}
+  .veyora-mega-feature img{width:100%;aspect-ratio:4/5;object-fit:cover}
+  .veyora-mega-feature__eyebrow{color:var(--veyora-champagne);font:600 9px/1.4 Jost,Arial,sans-serif;letter-spacing:.12em;text-transform:uppercase}
+  .veyora-mega-feature strong{font:600 14px/1.2 "Cormorant Garamond",Georgia,serif}
+  .veyora-mega-feature__link{color:var(--veyora-burgundy)}
+  .veyora-mega-menu__footer{margin-top:18px;padding-top:13px;border-top:1px solid rgba(23,21,19,.1);font:400 10px/1.4 Jost,Arial,sans-serif;color:rgba(23,21,19,.7)}
+  .veyora-header-actions{display:flex;align-items:center;gap:12px;flex:0 0 auto}
+  .veyora-icon-button{width:38px;height:38px;display:inline-flex;align-items:center;justify-content:center;border:0;background:transparent;color:var(--veyora-ink);text-decoration:none;cursor:pointer}
+  .veyora-icon-button:hover,.veyora-account-link:hover{color:var(--veyora-burgundy)}
+  .veyora-icon-button svg,.veyora-account-link svg,.veyora-bag-link svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.55;stroke-linecap:round;stroke-linejoin:round}
+  .veyora-account-link{display:flex;align-items:center;gap:7px;color:var(--veyora-ink);font:500 11px/1 Jost,Arial,sans-serif;text-decoration:none;white-space:nowrap}
+  .veyora-account-link svg{width:20px;height:20px}
+  .veyora-bag-link{display:flex;align-items:center;gap:8px;padding:11px 14px;background:var(--veyora-ink);color:var(--veyora-ivory);text-decoration:none;font:600 10px/1 Jost,Arial,sans-serif;letter-spacing:.1em;text-transform:uppercase;transition:background .2s}
+  .veyora-bag-link:hover{background:var(--veyora-burgundy);color:#fff}
+  .veyora-bag-link svg{width:17px;height:17px;color:var(--veyora-champagne)}
+  .veyora-bag-count{min-width:19px;height:19px;padding:0 5px;display:inline-flex;align-items:center;justify-content:center;border-radius:20px;background:var(--veyora-champagne);color:var(--veyora-ink);font-size:10px;letter-spacing:0}
+  .veyora-mobile-menu-trigger{display:none}
+  .veyora-mobile-drawer{position:fixed;inset:0;z-index:100;visibility:hidden;pointer-events:none}
+  .veyora-mobile-drawer.is-open{visibility:visible;pointer-events:auto}
+  .veyora-drawer-backdrop{position:absolute;inset:0;width:100%;height:100%;border:0;background:rgba(23,21,19,.62);opacity:0;transition:opacity .25s}
+  .veyora-mobile-drawer.is-open .veyora-drawer-backdrop{opacity:1}
+  .veyora-drawer-panel{position:absolute;inset:0 auto 0 0;width:min(390px,88vw);padding:24px;background:var(--veyora-ivory);display:flex;flex-direction:column;overflow:auto;transform:translateX(-100%);transition:transform .28s ease}
+  .veyora-mobile-drawer.is-open .veyora-drawer-panel{transform:translateX(0)}
+  .veyora-drawer-heading{display:flex;align-items:center;justify-content:space-between;padding-bottom:18px;border-bottom:1px solid rgba(23,21,19,.1)}
+  .veyora-brand--drawer .veyora-brand__wordmark{font-size:28px}
+  .veyora-drawer-copilot{display:flex;justify-content:space-between;align-items:center;margin-top:18px;padding:14px;background:var(--veyora-burgundy);color:white;text-decoration:none;font:600 11px/1.2 Jost,Arial,sans-serif;letter-spacing:.1em;text-transform:uppercase}
+  .veyora-drawer-links{display:grid;margin-top:20px}
+  .veyora-drawer-links>a,.veyora-drawer-group>summary{padding:13px 2px;border-bottom:1px solid rgba(23,21,19,.09);color:var(--veyora-ink);font:500 13px/1.3 Jost,Arial,sans-serif;text-decoration:none;list-style:none;cursor:pointer}
+  .veyora-drawer-group>summary{display:flex;justify-content:space-between}
+  .veyora-drawer-group>summary::-webkit-details-marker{display:none}
+  .veyora-drawer-group>summary span{color:var(--veyora-champagne)}
+  .veyora-drawer-sublinks{display:grid;gap:9px;padding:12px 10px 15px;background:#fff}
+  .veyora-drawer-sublinks a{color:rgba(23,21,19,.8);font:400 12px/1.3 Jost,Arial,sans-serif;text-decoration:none}
+  .veyora-drawer-sublinks .veyora-drawer-grandchild{padding-left:12px;color:rgba(23,21,19,.62)}
+  .veyora-drawer-footer{margin-top:auto;padding-top:24px;color:rgba(23,21,19,.6);font:400 11px/1.5 Jost,Arial,sans-serif}
+  .veyora-drawer-footer p{margin:0 0 5px}
+  .veyora-drawer-footer a{color:var(--veyora-burgundy);font-weight:600;text-decoration:none}
+  @keyframes veyoraFadeIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+  @media(max-width:1190px){.veyora-desktop-nav{gap:12px}.veyora-brand__wordmark{font-size:30px}.veyora-header__inner{gap:16px}.veyora-header-actions{gap:7px}}
+  @media(max-width:990px){.veyora-desktop-nav,.veyora-account-link{display:none}.veyora-mobile-menu-trigger{display:inline-flex}.veyora-header__inner{min-height:72px;padding:10px 18px;gap:10px}.veyora-header__inner>.veyora-brand{margin-right:auto}.veyora-brand__wordmark{font-size:29px}.veyora-header-actions{gap:4px}.veyora-bag-link{padding:9px 10px}.veyora-announcement__inner{padding:8px 14px;justify-content:center}.veyora-announcement__cod,.veyora-announcement__links{display:none}}
+  @media(max-width:520px){.veyora-header__inner{min-height:66px;padding:8px 12px}.veyora-brand__wordmark{font-size:25px}.veyora-brand__tagline{font-size:8px}.veyora-header-actions{gap:0}.veyora-header-actions .veyora-icon-button{width:34px}.veyora-bag-link{gap:5px;padding:9px}.veyora-bag-link>span:nth-child(2){display:none}.veyora-announcement__center{font-size:9px;letter-spacing:.04em}.veyora-announcement__delivery,.veyora-announcement__separator{display:none}}
+</style>
+
+<script>
+  (() => {
+    const drawer = document.querySelector('[data-veyora-drawer]');
+    const openButton = document.querySelector('[data-veyora-open-drawer]');
+    if (!drawer || !openButton || drawer.dataset.initialized === 'true') return;
+    drawer.dataset.initialized = 'true';
+    const closeButtons = drawer.querySelectorAll('[data-veyora-close-drawer]');
+    const closeDrawer = () => {
+      drawer.classList.remove('is-open');
+      drawer.setAttribute('aria-hidden', 'true');
+      openButton.setAttribute('aria-expanded', 'false');
+      document.body.classList.remove('veyora-menu-open');
+    };
+    openButton.addEventListener('click', () => {
+      drawer.classList.add('is-open');
+      drawer.setAttribute('aria-hidden', 'false');
+      openButton.setAttribute('aria-expanded', 'true');
+      document.body.classList.add('veyora-menu-open');
+    });
+    closeButtons.forEach((button) => button.addEventListener('click', closeDrawer));
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') closeDrawer();
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "VEYORA premium header",
+  "tag": "section",
+  "class": "section-veyora-header",
+  "settings": [
+    {"type":"image_picker","id":"logo","label":"Logo (optional)"},
+    {"type":"text","id":"brand_name","label":"Brand name","default":"VEYORA"},
+    {"type":"text","id":"brand_tagline","label":"Brand tagline","default":"Fashion • Style • You"},
+    {"type":"link_list","id":"menu","label":"Main menu"},
+    {"type":"text","id":"cod_text","label":"COD announcement","default":"Cash on Delivery (COD) Available Nationwide Across Pakistan"},
+    {"type":"text","id":"announcement_text","label":"Main announcement","default":"Complimentary Express Delivery on Orders Above PKR 5,000"},
+    {"type":"text","id":"delivery_text","label":"Delivery details","default":"TCS & Leopard Delivery in 2–4 Days"},
+    {"type":"text","id":"whatsapp_label","label":"WhatsApp label","default":"WhatsApp: 03494968548"},
+    {"type":"url","id":"whatsapp_url","label":"WhatsApp link"},
+    {"type":"url","id":"tracking_url","label":"Order tracking page"},
+    {"type":"url","id":"journal_url","label":"Style Journal page"},
+    {"type":"url","id":"rewards_url","label":"Rewards Club page"},
+    {"type":"url","id":"copilot_url","label":"Fashion Copilot page"},
+    {"type":"url","id":"wishlist_url","label":"Wishlist page"},
+    {"type":"text","id":"mega_heading","label":"Mega menu heading","default":"All Women's Departments & Wardrobe Universes"},
+    {"type":"text","id":"view_catalog_label","label":"Catalog link label","default":"View Full Catalog"},
+    {"type":"image_picker","id":"feature_image","label":"Mega menu feature image"},
+    {"type":"text","id":"feature_eyebrow","label":"Feature eyebrow","default":"Festive '26"},
+    {"type":"text","id":"feature_title","label":"Feature title","default":"Discover the Collection"},
+    {"type":"text","id":"feature_link_label","label":"Feature link label","default":"Explore Piece"},
+    {"type":"url","id":"feature_url","label":"Feature destination"},
+    {"type":"text","id":"mega_footer_left","label":"Mega menu footer left","default":"Thoughtfully curated women's fashion"},
+    {"type":"text","id":"mega_footer_right","label":"Mega menu footer right","default":"Nationwide doorstep delivery"},
+    {"type":"text","id":"drawer_footer","label":"Mobile drawer footer","default":"Karachi Atelier · Cash on Delivery Nationwide"}
+  ],
+  "presets": [{"name":"VEYORA premium header"}]
+}
+{% endschema %}
