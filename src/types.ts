@@ -22,6 +22,9 @@ export interface Department {
 export interface Product {
   id: string;
   title: string;
+  shopifyVariantId?: string;
+  shopifyVariants?: { id: string; title: string; availableForSale: boolean; quantityAvailable?: number | null; price: number; selectedOptions: { name: string; value: string }[] }[];
+  isShopifyProduct?: boolean;
   department: DepartmentId;
   category: string;
   price: number; // in PKR
@@ -49,6 +52,7 @@ export interface Product {
 export interface CartItem {
   id: string; // unique item id = `${productId}-${selectedSize}-${selectedColor}-${stitchingOption}`
   productId: string;
+  shopifyVariantId?: string;
   title: string;
   price: number;
   image: string;
