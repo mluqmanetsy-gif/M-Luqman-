@@ -287,8 +287,8 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
     try {
       const result = await createStorefrontCart(lines, {
-        email: userProfile.email || undefined,
-        phone: userProfile.phone || undefined,
+        email: buyer.email || userProfile.email || undefined,
+        phone: buyer.phone || userProfile.phone || undefined,
         countryCode: 'PK',
       });
       window.location.assign(result.checkoutUrl);
