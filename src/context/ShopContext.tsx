@@ -157,20 +157,9 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [cart, setCart] = useState<CartItem[]>(() => {
     try {
       const saved = localStorage.getItem('veyora_cart');
-      return saved ? JSON.parse(saved) : [
-        {
-          id: 'veyora-cl-01-S-Ivory Gold-stitched',
-          productId: 'veyora-cl-01',
-          title: 'Zehra — Embroidered Raw Silk Festive Kurta Set',
-          price: 28500,
-          image: '/images/hero_luxury_couture_1794123004357.jpg',
-          size: 'S',
-          color: 'Ivory Gold',
-          isStitched: true,
-          stitchingPrice: 4500,
-          quantity: 1
-        }
-      ];
+      return saved
+        ? (JSON.parse(saved) as CartItem[]).filter((item) => Boolean(item.shopifyVariantId))
+        : [];
     } catch {
       return [];
     }
