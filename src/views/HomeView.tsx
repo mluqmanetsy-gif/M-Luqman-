@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useShop } from '../context/ShopContext';
-import { PRODUCTS, SAMPLE_REVIEWS } from '../data/products';
+import { SAMPLE_REVIEWS } from '../data/products';
 import { DEPARTMENTS } from '../data/departments';
 import { ProductCard } from '../components/ProductCard';
 import {
@@ -31,14 +31,14 @@ interface CampaignSlide {
 }
 
 export const HomeView: React.FC = () => {
-  const { navigateTo, setIsStylistOpen, setIsSizeAssistantOpen, addToCart, formatPKR, showToast } = useShop();
+  const { navigateTo, setIsStylistOpen, setIsSizeAssistantOpen, addToCart, formatPKR, showToast, products, productsLoading, productsError } = useShop();
   
   // Hero Carousel State
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const [isCarouselPaused, setIsCarouselPaused] = useState(false);
 
   // Tabbed Grid State
-  const [activeTab, setActiveTab] = useState<'all' | 'new' | 'bestsellers' | 'trending' | 'festive'>('all');
+  const [activeTab, setActiveTab] = useState<'all' | 'clothing' | 'footwear' | 'bags' | 'jewellery'>('all');
 
   // Complete the Look Bundle Selection State
   const mainLookDress = PRODUCTS.find((p) => p.id === 'veyora-cl-01') || PRODUCTS[0];
@@ -109,12 +109,9 @@ export const HomeView: React.FC = () => {
   const currentSlide = campaignSlides[currentSlideIndex];
 
   // Filtered Products for Tabbed Grid
-  const filteredProducts = PRODUCTS.filter((p) => {
-    if (activeTab === 'new') return p.isNewArrival;
-    if (activeTab === 'bestsellers') return p.isBestseller;
-    if (activeTab === 'trending') return p.isTrending || p.isBestseller;
-    if (activeTab === 'festive') return p.isFestive;
-    return true;
+  const filteredProducts = products.filter((product) => {
+    if (activeTab === 'all') return true;
+    return product.department === activeTab;
   });
 
   // Bundle Calculations
@@ -356,67 +353,50 @@ export const HomeView: React.FC = () => {
             </h2>
           </div>
 
-          {/* Interactive Filter Tabs */}
+          {/* Live Shopify collection filters */}
           <div className="flex flex-wrap items-center gap-1 p-1 bg-white border border-[#171513]/10">
-            <button
-              onClick={() => setActiveTab('all')}
-              className={`px-3.5 py-1.5 text-xs font-medium uppercase tracking-wider transition-colors ${
-                activeTab === 'all'
-                  ? 'bg-[#171513] text-white shadow-xs'
-                  : 'text-[#171513]/70 hover:text-[#171513]'
-              }`}
-            >
-              All Pieces
-            </button>
-            <button
-              onClick={() => setActiveTab('new')}
-              className={`px-3.5 py-1.5 text-xs font-medium uppercase tracking-wider transition-colors ${
-                activeTab === 'new'
-                  ? 'bg-[#171513] text-white shadow-xs'
-                  : 'text-[#171513]/70 hover:text-[#171513]'
-              }`}
-            >
-              New Arrivals
-            </button>
-            <button
-              onClick={() => setActiveTab('bestsellers')}
-              className={`px-3.5 py-1.5 text-xs font-medium uppercase tracking-wider transition-colors ${
-                activeTab === 'bestsellers'
-                  ? 'bg-[#171513] text-white shadow-xs'
-                  : 'text-[#171513]/70 hover:text-[#171513]'
-              }`}
-            >
-              Bestsellers
-            </button>
-            <button
-              onClick={() => setActiveTab('trending')}
-              className={`px-3.5 py-1.5 text-xs font-medium uppercase tracking-wider transition-colors ${
-                activeTab === 'trending'
-                  ? 'bg-[#171513] text-white shadow-xs'
-                  : 'text-[#171513]/70 hover:text-[#171513]'
-              }`}
-            >
-              Trending
-            </button>
-            <button
-              onClick={() => setActiveTab('festive')}
-              className={`px-3.5 py-1.5 text-xs font-medium uppercase tracking-wider transition-colors ${
-                activeTab === 'festive'
-                  ? 'bg-[#171513] text-white shadow-xs'
-                  : 'text-[#171513]/70 hover:text-[#171513]'
-              }`}
-            >
-              Festive '26
-            </button>
+            {([
+              ['all', 'All Pieces'],
+              ['clothing', 'Clothing'],
+              ['footwear', 'Footwear'],
+              ['bags', 'Bags'],
+              ['jewellery', 'Jewellery']
+            ] as const).map(([value, label]) => (
+              <button
+                key={value}
+                onClick={() => setActiveTab(value)}
+                className={`px-3.5 py-1.5 text-xs font-medium uppercase tracking-wider transition-colors ${
+                  activeTab === value
+                    ? 'bg-[#171513] text-white shadow-xs'
+                    : 'text-[#171513]/70 hover:text-[#171513]'
+                }`}
+              >
+                {label}
+              </button>
+            ))}
           </div>
         </div>
 
         {/* Product Cards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {filteredProducts.slice(0, 8).map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
+        {productsLoading ? (
+          <div className="py-16 text-center text-sm text-[#171513]/60">Loading live VEYORA products…</div>
+        ) : productsError ? (
+          <div className="py-12 px-5 text-center border border-[#641D32]/20 bg-white">
+            <p className="text-sm text-[#641D32]">Live products could not be loaded.</p>
+            <p className="text-xs text-[#171513]/60 mt-2">Please refresh in a moment or browse the collections.</p>
+          </div>
+        ) : filteredProducts.length ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {filteredProducts.slice(0, 8).map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        ) : (
+          <div className="py-16 text-center border border-[#171513]/10 bg-white">
+            <p className="font-serif text-xl text-[#171513]">More pieces are arriving soon.</p>
+            <p className="text-xs text-[#171513]/60 mt-2">Explore another department to discover available designs.</p>
+          </div>
+        )}
       </section>
 
       {/* 4. COMPLETE THE LOOK (INTELLIGENT OUTFIT RECOMMENDATION SECTION) */}
