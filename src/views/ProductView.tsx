@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useShop } from '../context/ShopContext';
-import { PRODUCTS, SAMPLE_REVIEWS } from '../data/products';
+import { PRODUCTS } from '../data/products';
 import { ProductCard } from '../components/ProductCard';
 import {
   Heart,
@@ -46,7 +46,7 @@ export const ProductView: React.FC = () => {
   const [reviewerName, setReviewerName] = useState<string>('');
   const [reviewerCity, setReviewerCity] = useState<string>('Karachi');
   const [reviewComment, setReviewComment] = useState<string>('');
-  const [reviewsList, setReviewsList] = useState([] as typeof SAMPLE_REVIEWS);
+  const [reviewsList, setReviewsList] = useState([] as any[]);
   const [showReviewForm, setShowReviewForm] = useState<boolean>(false);
 
   // Complete the Look ensemble resolution
@@ -203,6 +203,15 @@ export const ProductView: React.FC = () => {
   };
 
   const relatedProducts = products.filter((p) => p.isShopifyProduct && p.id !== product.id && p.department === product.department).slice(0, 4);
+
+  if (!selectedProduct) {
+    return (
+      <div className="min-h-[50vh] flex flex-col items-center justify-center px-6 text-center">
+        <h2 className="font-serif text-2xl text-[#171513]">Product unavailable</h2>
+        <p className="mt-2 text-sm text-[#171513]/60">Please choose an available product from the collection.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-16">
@@ -585,134 +594,12 @@ export const ProductView: React.FC = () => {
 
       </div>
 
-      {/* VERIFIED REVIEWS SECTION */}
+      {/* REVIEWS — awaiting a connected review provider */}
       <section className="bg-white p-6 sm:p-10 border border-[#171513]/10">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-[#171513]/10 gap-4">
-          <div>
-            <h3 className="font-serif text-2xl font-semibold text-[#171513]">
-              Customer Reviews ({reviewsList.length})
-            </h3>
-            <p className="text-xs text-[#171513]/60 mt-1">
-              Reviews will appear here when customer reviews are connected.
-            </p>
-          </div>
-
-          <button
-            onClick={() => setShowReviewForm(!showReviewForm)}
-            className="px-5 py-2.5 bg-[#171513] text-white text-xs font-semibold uppercase tracking-wider hover:bg-[#641D32] transition-colors self-start sm:self-auto"
-          >
-            {showReviewForm ? 'Cancel Review' : 'Write a Review'}
-          </button>
-        </div>
-
-        {/* Review Form */}
-        {showReviewForm && (
-          <form onSubmit={handleAddReview} className="py-6 border-b border-[#171513]/10 space-y-4 max-w-xl">
-            <span className="text-xs uppercase tracking-widest text-[#B69A70] font-semibold block">
-              Share Your Experience
-            </span>
-
-            <div>
-              <span className="text-xs text-[#171513] font-medium block mb-1">Your Rating:</span>
-              <div className="flex gap-1">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <button
-                    key={star}
-                    type="button"
-                    onClick={() => setUserRating(star)}
-                    className="p-1"
-                  >
-                    <Star
-                      className={`w-5 h-5 ${
-                        star <= userRating ? 'fill-[#B69A70] text-[#B69A70]' : 'text-gray-300'
-                      }`}
-                    />
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="text-xs text-[#171513] font-medium block mb-1">Your Name</label>
-                <input
-                  type="text"
-                  required
-                  value={reviewerName}
-                  onChange={(e) => setReviewerName(e.target.value)}
-                  placeholder="e.g. Maryam Farooq"
-                  className="w-full text-xs border border-[#171513]/20 p-2.5 focus:outline-none focus:border-[#641D32]"
-                />
-              </div>
-
-              <div>
-                <label className="text-xs text-[#171513] font-medium block mb-1">City in Pakistan</label>
-                <select
-                  value={reviewerCity}
-                  onChange={(e) => setReviewerCity(e.target.value)}
-                  className="w-full text-xs border border-[#171513]/20 p-2.5 focus:outline-none focus:border-[#641D32] bg-white"
-                >
-                  <option value="Lahore">Lahore</option>
-                  <option value="Karachi">Karachi</option>
-                  <option value="Islamabad">Islamabad</option>
-                  <option value="Rawalpindi">Rawalpindi</option>
-                  <option value="Faisalabad">Faisalabad</option>
-                  <option value="Peshawar">Peshawar</option>
-                  <option value="Multan">Multan</option>
-                  <option value="Sialkot">Sialkot</option>
-                  <option value="Quetta">Quetta</option>
-                </select>
-              </div>
-            </div>
-
-            <div>
-              <label className="text-xs text-[#171513] font-medium block mb-1">Your Remarks on Quality & Fit</label>
-              <textarea
-                required
-                rows={3}
-                value={reviewComment}
-                onChange={(e) => setReviewComment(e.target.value)}
-                placeholder="Share thoughts on the zardozi detail, silk texture, fit, or COD delivery speed..."
-                className="w-full text-xs border border-[#171513]/20 p-2.5 focus:outline-none focus:border-[#641D32]"
-              />
-            </div>
-
-            <button
-              type="submit"
-              className="px-6 py-2.5 bg-[#641D32] text-white text-xs font-semibold uppercase tracking-wider"
-            >
-              Submit Review
-            </button>
-          </form>
-        )}
-
-        {/* Reviews List */}
-        <div className="pt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-          {reviewsList.map((rev) => (
-            <div key={rev.id} className="p-4 bg-[#F6F2EC] border border-[#171513]/5 space-y-2">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-1">
-                  {[...Array(rev.rating)].map((_, i) => (
-                    <Star key={i} className="w-3.5 h-3.5 fill-[#B69A70] text-[#B69A70]" />
-                  ))}
-                </div>
-                <span className="text-[10px] text-[#1E3A2F] font-semibold flex items-center gap-1">
-                  <ShieldCheck className="w-3 h-3" />
-                  Customer-submitted
-                </span>
-              </div>
-
-              <p className="text-xs text-[#171513]/85 leading-relaxed italic">
-                "{rev.comment}"
-              </p>
-
-              <div className="pt-2 border-t border-[#171513]/5 flex justify-between text-[11px] text-[#171513]/60">
-                <span className="font-semibold text-[#171513]">{rev.author} ({rev.city})</span>
-                <span>{rev.date}</span>
-              </div>
-            </div>
-          ))}
-        </div>
+        <h3 className="font-serif text-2xl font-semibold text-[#171513]">Customer Reviews</h3>
+        <p className="text-xs text-[#171513]/60 mt-2">
+          Customer reviews will appear here once a review service is connected.
+        </p>
       </section>
 
       {/* COMPLETE THE LOOK ENSEMBLE BUILDER */}
