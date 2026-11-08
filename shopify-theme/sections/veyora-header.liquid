@@ -42,6 +42,8 @@
     </a>
 
     <nav class="veyora-desktop-nav" aria-label="Main navigation">
+      <a class="veyora-nav-link" href="{{ section.settings.new_arrivals_url }}">{{ section.settings.new_arrivals_label | escape }}</a>
+      <a class="veyora-nav-link" href="{{ section.settings.bestsellers_url }}">{{ section.settings.bestsellers_label | escape }}</a>
       {%- if nav_menu != blank -%}
         {%- for link in nav_menu.links -%}
           {%- assign link_label = link.title | downcase -%}
@@ -288,6 +290,10 @@
     {"type":"text","id":"whatsapp_label","label":"WhatsApp label","default":"WhatsApp: 03494968548"},
     {"type":"url","id":"whatsapp_url","label":"WhatsApp link"},
     {"type":"url","id":"tracking_url","label":"Order tracking page"},
+    {"type":"url","id":"new_arrivals_url","label":"New Arrivals collection"},
+    {"type":"text","id":"new_arrivals_label","label":"New Arrivals label","default":"New Arrivals"},
+    {"type":"url","id":"bestsellers_url","label":"Bestsellers collection"},
+    {"type":"text","id":"bestsellers_label","label":"Bestsellers label","default":"Bestsellers"},
     {"type":"url","id":"journal_url","label":"Style Journal page"},
     {"type":"url","id":"rewards_url","label":"Rewards Club page"},
     {"type":"url","id":"copilot_url","label":"Fashion Copilot page"},
