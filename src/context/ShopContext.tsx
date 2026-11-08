@@ -20,7 +20,7 @@ interface ShopContextType {
   // Cart
   cart: CartItem[];
   addToCart: (item: Omit<CartItem, 'id'>) => void;
-  checkoutWithShopify: () => Promise<void>;
+  checkoutWithShopify: (buyer?: { email?: string; phone?: string }) => Promise<void>;
   removeFromCart: (itemId: string) => void;
   updateCartQuantity: (itemId: string, quantity: number) => void;
   clearCart: () => void;
@@ -283,7 +283,7 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsCartDrawerOpen(true);
   };
 
-  const checkoutWithShopify = async () => {
+  const checkoutWithShopify = async (buyer: { email?: string; phone?: string } = {}) => {
     if (cart.length === 0) {
       showToast('Your shopping bag is empty.', 'info');
       return;
