@@ -9,6 +9,7 @@ export const CartView: React.FC = () => {
     updateCartQuantity,
     cartSubtotal,
     clearCart,
+    checkoutWithShopify,
     navigateTo,
     formatPKR
   } = useShop();
@@ -17,11 +18,9 @@ export const CartView: React.FC = () => {
   const [promoCode, setPromoCode] = useState('');
   const [promoApplied, setPromoApplied] = useState(false);
 
-  const FREE_SHIPPING_LIMIT = 5000;
-  const isFreeShipping = cartSubtotal >= FREE_SHIPPING_LIMIT;
-  const discount = promoApplied ? Math.round(cartSubtotal * 0.1) : 0;
-  const shippingCharge = isFreeShipping || cartSubtotal === 0 ? 0 : 250;
-  const grandTotal = Math.max(0, cartSubtotal - discount + shippingCharge);
+  const discount = 0;
+  const shippingCharge = 0;
+  const grandTotal = cartSubtotal;
 
   const handleApplyPromo = (e: React.FormEvent) => {
     e.preventDefault();
@@ -240,44 +239,40 @@ export const CartView: React.FC = () => {
             <div className="flex justify-between items-center">
               <div>
                 <span>Nationwide Express Delivery</span>
-                <span className="text-[10px] text-[#171513]/50 block">TCS & Leopard Express</span>
+                <span className="text-[10px] text-[#171513]/50 block">Final rate calculated by Shopify at checkout</span>
               </div>
               <span className="font-mono font-semibold">
-                {shippingCharge === 0 ? (
-                  <span className="text-[#1E3A2F]">COMPLIMENTARY</span>
-                ) : (
-                  formatPKR(shippingCharge)
-                )}
+<span className="text-[#641D32]">At checkout</span>
               </span>
             </div>
 
             <div className="pt-3 border-t border-[#171513]/10 flex justify-between items-baseline text-base font-bold text-[#171513]">
-              <span className="font-serif text-lg">Total Amount (PKR)</span>
+              <span className="font-serif text-lg">Subtotal (PKR)</span>
               <span className="font-mono text-xl text-[#641D32]">
                 {formatPKR(grandTotal)}
               </span>
             </div>
             <span className="text-[10px] text-[#171513]/60 block text-right">
-              All applicable sales taxes included
+              Shipping, taxes and final total are confirmed securely by Shopify at checkout.
             </span>
           </div>
 
           {/* Primary Action Button */}
           <button
-            onClick={() => navigateTo('checkout')}
+            onClick={() => void checkoutWithShopify()}
             className="w-full py-4 bg-[#171513] hover:bg-[#641D32] text-white text-xs font-semibold uppercase tracking-widest flex items-center justify-center gap-2 transition-all shadow-md"
           >
-            <span>Proceed to Cash on Delivery</span>
+            <span>Continue to Secure Shopify Checkout</span>
             <ArrowRight className="w-4 h-4 text-[#B69A70]" />
           </button>
 
           <div className="p-3 bg-[#F6F2EC] text-[11px] text-[#171513]/70 space-y-1.5 border border-[#171513]/5">
             <div className="flex items-center gap-1.5 text-[#171513] font-semibold">
               <ShieldCheck className="w-3.5 h-3.5 text-[#641D32]" />
-              <span>Cash on Delivery (COD) Guaranteed</span>
+              <span>Shopify Secure Checkout</span>
             </div>
             <p>
-              Inspect your parcel at the door before handing over payment to the TCS or Leopard courier representative.
+Available payment methods, including Cash on Delivery if enabled in your Shopify settings, will appear at checkout.
             </p>
           </div>
 
