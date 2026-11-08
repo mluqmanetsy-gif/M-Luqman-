@@ -1,22 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useShop } from '../context/ShopContext';
 import { DEPARTMENTS } from '../data/departments';
 import { BUSINESS_INFO } from '../data/products';
-import { Truck, ShieldCheck, RefreshCw, MessageSquare, ArrowRight, Instagram, Facebook, Phone, Mail, MapPin } from 'lucide-react';
+import { Truck, ShieldCheck, RefreshCw, MessageSquare, Instagram, Facebook, Phone, Mail, MapPin } from 'lucide-react';
 
 export const Footer: React.FC = () => {
-  const { navigateTo, showToast } = useShop();
-  const [email, setEmail] = useState('');
-
-  const handleSubscribe = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email || !email.includes('@')) {
-      showToast('Please enter a valid email address.', 'error');
-      return;
-    }
-    showToast('Welcome to VEYORA VIP Club! Use code VEYORA10 for 10% off your first order.');
-    setEmail('');
-  };
+  const { navigateTo } = useShop();
 
   return (
     <footer className="bg-[#171513] text-[#F6F2EC] border-t border-[#B69A70]/20">
@@ -28,9 +17,9 @@ export const Footer: React.FC = () => {
               <Truck className="w-6 h-6 text-[#B69A70]" />
             </div>
             <div>
-              <h4 className="font-serif text-lg text-white font-medium">Nationwide Cash on Delivery</h4>
+              <h4 className="font-serif text-lg text-white font-medium">Payment Options</h4>
               <p className="text-xs text-[#EEE5DF]/70 mt-1">
-                Dispatched via TCS and Leopard Couriers across 250+ cities in Pakistan.
+                Available payment methods are displayed during checkout.
               </p>
             </div>
           </div>
@@ -40,9 +29,9 @@ export const Footer: React.FC = () => {
               <RefreshCw className="w-6 h-6 text-[#B69A70]" />
             </div>
             <div>
-              <h4 className="font-serif text-lg text-white font-medium">7-Day Effortless Exchange</h4>
+              <h4 className="font-serif text-lg text-white font-medium">Customer Care</h4>
               <p className="text-xs text-[#EEE5DF]/70 mt-1">
-                Hassle-free size or style replacements with complimentary doorstep pickup.
+                Visit our policy pages for current order, return and exchange information.
               </p>
             </div>
           </div>
@@ -52,9 +41,9 @@ export const Footer: React.FC = () => {
               <ShieldCheck className="w-6 h-6 text-[#B69A70]" />
             </div>
             <div>
-              <h4 className="font-serif text-lg text-white font-medium">Pure Fabric & Craft Guarantee</h4>
+              <h4 className="font-serif text-lg text-white font-medium">Explore the Collection</h4>
               <p className="text-xs text-[#EEE5DF]/70 mt-1">
-                100% authentic pure raw silks, micro-velvet, fine lawn and hand-laid zardozi.
+                Browse product pages for item-specific descriptions and details.
               </p>
             </div>
           </div>
@@ -64,9 +53,9 @@ export const Footer: React.FC = () => {
               <MessageSquare className="w-6 h-6 text-[#B69A70]" />
             </div>
             <div>
-              <h4 className="font-serif text-lg text-white font-medium">VIP WhatsApp Concierge</h4>
+              <h4 className="font-serif text-lg text-white font-medium">Need Assistance?</h4>
               <p className="text-xs text-[#EEE5DF]/70 mt-1">
-                Personalized bridal, festive sizing and styling consultation 7 days a week.
+                Contact VEYORA through the details listed below.
               </p>
             </div>
           </div>
@@ -88,7 +77,7 @@ export const Footer: React.FC = () => {
               </span>
             </div>
             <p className="text-sm text-[#EEE5DF]/75 leading-relaxed pr-6">
-              A celebration of modern Pakistani elegance. VEYORA crafts bespoke luxury pret, festive heirlooms, and handcrafted accessories designed for the contemporary woman.
+              A considered edit of women’s fashion, designed to celebrate personal style and modern Pakistani elegance.
             </p>
 
             {/* Official Social Media Links */}
@@ -137,30 +126,6 @@ export const Footer: React.FC = () => {
               </div>
             </div>
 
-            {/* Newsletter */}
-            <div className="pt-2">
-              <span className="text-xs uppercase tracking-wider text-[#B69A70] font-semibold block mb-2">
-                Join the VEYORA Circle
-              </span>
-              <p className="text-xs text-[#EEE5DF]/60 mb-3">
-                Receive private invitations to couture preview drops and exclusive seasonal privileges.
-              </p>
-              <form onSubmit={handleSubscribe} className="flex max-w-md">
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter your email address"
-                  className="bg-[#24211E] border border-[#F6F2EC]/20 text-sm px-4 py-3 text-white placeholder-[#EEE5DF]/40 focus:outline-none focus:border-[#B69A70] flex-1"
-                />
-                <button
-                  type="submit"
-                  className="bg-[#B69A70] hover:bg-[#A3855B] text-[#171513] font-semibold px-5 py-3 transition-colors flex items-center justify-center text-xs uppercase tracking-wider"
-                >
-                  <ArrowRight className="w-4 h-4" />
-                </button>
-              </form>
-            </div>
           </div>
 
           {/* Departments Column */}
@@ -217,7 +182,7 @@ export const Footer: React.FC = () => {
                   onClick={() => navigateTo('return-policy')}
                   className="hover:text-white hover:translate-x-1 transition-all"
                 >
-                  7-Day Returns & Exchanges
+                  Returns & Exchanges
                 </button>
               </li>
               <li>
