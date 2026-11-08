@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useShop } from '../context/ShopContext';
-import { SAMPLE_REVIEWS } from '../data/products';
 import { DEPARTMENTS } from '../data/departments';
 import { ProductCard } from '../components/ProductCard';
 import { Product } from '../types';
 import {
   ArrowRight,
   Sparkles,
-  Star,
   ShieldCheck,
   Truck,
   Scissors,
@@ -16,7 +14,6 @@ import {
   Check,
   ShoppingBag,
   Send,
-  Mail
 } from 'lucide-react';
 
 interface CampaignSlide {
@@ -54,9 +51,6 @@ export const HomeView: React.FC = () => {
     setSelectedBundleItems(lookItems.map((item) => item.id));
   }, [products]);
 
-  // Newsletter State
-  const [newsletterEmail, setNewsletterEmail] = useState('');
-  const [newsletterSubscribed, setNewsletterSubscribed] = useState(false);
 
   const campaignSlides: CampaignSlide[] = [
     {
@@ -64,7 +58,7 @@ export const HomeView: React.FC = () => {
       tagline: "Festive & Bridal Heirlooms '26",
       headline: 'The Sovereign Grace of Pakistani Couture',
       description:
-        'Hand-spun raw silks, pure Italian micro-velvet, and generational zardozi needlework. Bespoke luxury tailored for celebratory moments across Pakistan.',
+        'Discover an expressive edit of occasionwear and contemporary pieces for memorable moments.',
       image: '/src/assets/images/hero_luxury_couture_1794123004357.jpg',
       primaryCtaText: 'Shop New Arrivals',
       primaryAction: () => navigateTo('collection', { department: 'clothing', category: 'All' }),
@@ -76,7 +70,7 @@ export const HomeView: React.FC = () => {
       tagline: 'Daytime Soirée & Pure Lawn Pret',
       headline: 'Effortless Summer Opulence & Chikan Jaal',
       description:
-        'Egyptian pima lawn infused with tone-on-tone chikankari and lightweight pure silk dupattas. Tailored for sophisticated Karachi and Lahore afternoons.',
+        'Explore graceful everyday looks and refined details for effortless day-to-evening style.',
       image: '/src/assets/images/cotton_pret_editorial_1794123005836.jpg',
       primaryCtaText: 'Discover Luxury Pret',
       primaryAction: () => navigateTo('collection', { department: 'clothing', category: 'Kurtas' }),
@@ -88,7 +82,7 @@ export const HomeView: React.FC = () => {
       tagline: 'Royal Courtly Heirlooms',
       headline: 'Mughal Burgundy Velvet & Dabka Ghararas',
       description:
-        'Rich burgundy micro-9000 velvet adorned with antique gold dabka and Sitara bullion embroidery, delivered nationwide with Cash on Delivery.',
+        'Discover rich tones and statement styles for your next special occasion.',
       image: '/src/assets/images/festive_velvet_collection_1794123003980.jpg',
       primaryCtaText: 'Shop Festive Formals',
       primaryAction: () => navigateTo('product', { productId: 'veyora-cl-02' }),
@@ -149,16 +143,6 @@ export const HomeView: React.FC = () => {
     });
 
     showToast(`Added ${itemsToAdd.length} curated pieces from "Complete the Look" to your bag!`);
-  };
-
-  const handleNewsletterSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newsletterEmail || !newsletterEmail.includes('@')) {
-      showToast('Please enter a valid email address.', 'error');
-      return;
-    }
-    setNewsletterSubscribed(true);
-    showToast('Welcome to the VEYORA Circle! Use promo code VEYORA10 for 10% off.');
   };
 
   return (
@@ -242,11 +226,11 @@ export const HomeView: React.FC = () => {
               </div>
               <div className="flex items-center gap-2">
                 <Scissors className="w-4 h-4 text-[#B69A70]" />
-                <span>Bespoke Master Tailoring</span>
+                <span>Curated Women’s Fashion</span>
               </div>
               <div className="flex items-center gap-2">
                 <ShieldCheck className="w-4 h-4 text-[#B69A70]" />
-                <span>Karachi Atelier Authenticity</span>
+                <span>Discover Your Signature Style</span>
               </div>
             </div>
 
@@ -608,110 +592,13 @@ export const HomeView: React.FC = () => {
         </div>
       </section>
 
-      {/* 6. VERIFIED PAKISTANI CUSTOMER TESTIMONIALS */}
+      {/* 6. EDITORIAL DISCOVERY CTA */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-2xl mx-auto mb-12">
-          <span className="text-xs uppercase tracking-[0.25em] text-[#B69A70] font-semibold block mb-2">
-            The VEYORA Experience
-          </span>
-          <h2 className="font-serif text-3xl sm:text-4xl font-semibold text-[#171513]">
-            Voices of Our Discerning Patrons
-          </h2>
-          <p className="text-xs text-[#171513]/60 mt-2">
-            Verified purchases delivered via Cash on Delivery across Karachi, Lahore, and Islamabad
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {SAMPLE_REVIEWS.map((rev) => (
-            <div
-              key={rev.id}
-              className="bg-white p-6 border border-[#171513]/10 shadow-xs flex flex-col justify-between"
-            >
-              <div>
-                <div className="flex items-center gap-1 mb-3">
-                  {[...Array(rev.rating)].map((_, i) => (
-                    <Star key={i} className="w-3.5 h-3.5 fill-[#B69A70] text-[#B69A70]" />
-                  ))}
-                </div>
-                <p className="text-xs text-[#171513]/80 leading-relaxed italic mb-4">
-                  "{rev.comment}"
-                </p>
-              </div>
-
-              <div className="pt-4 border-t border-[#171513]/5">
-                <div className="flex items-center justify-between">
-                  <span className="font-serif text-sm font-semibold text-[#171513]">
-                    {rev.author}
-                  </span>
-                  <span className="text-[10px] text-[#1E3A2F] font-semibold flex items-center gap-1">
-                    <ShieldCheck className="w-3 h-3" />
-                    Verified COD
-                  </span>
-                </div>
-                <span className="text-[11px] text-[#171513]/60 block mt-0.5">
-                  {rev.city} · {rev.date}
-                </span>
-                {rev.fitFeedback && (
-                  <span className="text-[10px] text-[#641D32] font-medium block mt-1">
-                    Fit: {rev.fitFeedback}
-                  </span>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* 7. NEWSLETTER SUBSCRIPTION & VIP CIRCLE */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-[#171513] text-[#F6F2EC] p-8 sm:p-12 lg:p-16 border border-[#B69A70]/30 shadow-2xl relative overflow-hidden">
-          <div className="relative z-10 max-w-3xl mx-auto text-center space-y-6">
-            
-            <div className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.25em] text-[#B69A70] font-semibold">
-              <Mail className="w-4 h-4" />
-              <span>VEYORA Privilège Circle</span>
-            </div>
-
-            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-medium text-white">
-              Subscribe to Private Heirlooms & Seasonal Trunk Shows
-            </h2>
-
-            <p className="text-xs sm:text-sm text-[#EEE5DF]/75 font-light max-w-xl mx-auto leading-relaxed">
-              Receive confidential invitations to new lawn drops, couture previews, styling chronicles from Karachi, and enjoy 10% off your initial order.
-            </p>
-
-            {newsletterSubscribed ? (
-              <div className="p-4 bg-white/10 border border-[#B69A70] max-w-md mx-auto text-center space-y-1">
-                <span className="text-xs font-semibold text-[#B69A70]">✓ Welcome to the Privilège Circle</span>
-                <p className="text-[11px] text-[#EEE5DF]">
-                  Use promotional voucher <span className="font-mono font-bold text-white">VEYORA10</span> at checkout for 10% off.
-                </p>
-              </div>
-            ) : (
-              <form onSubmit={handleNewsletterSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-                <input
-                  type="email"
-                  value={newsletterEmail}
-                  onChange={(e) => setNewsletterEmail(e.target.value)}
-                  placeholder="Enter your email address..."
-                  required
-                  className="flex-1 px-4 py-3 bg-white/5 border border-white/20 text-white placeholder-white/40 text-xs focus:outline-none focus:border-[#B69A70]"
-                />
-                <button
-                  type="submit"
-                  className="px-6 py-3 bg-[#B69A70] hover:bg-[#A3855B] text-[#171513] text-xs font-semibold uppercase tracking-wider transition-colors flex items-center justify-center gap-2"
-                >
-                  <span>Join</span>
-                  <Send className="w-3.5 h-3.5" />
-                </button>
-              </form>
-            )}
-
-            <span className="text-[10px] text-[#EEE5DF]/50 block">
-              Strictly zero spam. Unsubscribe anytime with 1-click.
-            </span>
-          </div>
+        <div className="bg-[#171513] text-[#F6F2EC] p-8 sm:p-12 lg:p-16 border border-[#B69A70]/30 text-center">
+          <span className="text-xs uppercase tracking-[0.25em] text-[#B69A70] font-semibold">The VEYORA Edit</span>
+          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-white mt-3">Discover a style that feels like you.</h2>
+          <p className="text-sm text-[#EEE5DF]/75 mt-3 max-w-xl mx-auto">Explore the latest pieces and build a look that reflects your own expression.</p>
+          <button onClick={() => navigateTo('collection', { department: 'all' })} className="mt-7 px-8 py-3 bg-[#641D32] hover:bg-[#7D2640] text-white text-xs font-semibold uppercase tracking-widest">Explore the Collection</button>
         </div>
       </section>
 
@@ -727,7 +614,7 @@ export const HomeView: React.FC = () => {
                 Nationwide Cash on Delivery Across Pakistan
               </h3>
               <p className="text-xs text-[#171513]/75 mt-1 max-w-xl font-light">
-                Order online with total peace of mind. Pay the courier at your doorstep after parcel verification in Karachi, Lahore, Islamabad, Rawalpindi, Peshawar, Quetta, and 250+ towns.
+                Explore VEYORA online and review the available payment and delivery details at checkout.
               </p>
             </div>
           </div>
