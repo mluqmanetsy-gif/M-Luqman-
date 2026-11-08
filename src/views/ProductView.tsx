@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useShop } from '../context/ShopContext';
 import { PRODUCTS, SAMPLE_REVIEWS } from '../data/products';
 import { ProductCard } from '../components/ProductCard';
@@ -43,7 +43,7 @@ export const ProductView: React.FC = () => {
   // Review form states
   const [userRating, setUserRating] = useState<number>(5);
   const [reviewerName, setReviewerName] = useState<string>('');
-  const [reviewerCity, setReviewerCity] = useState<string>('Lahore');
+  const [reviewerCity, setReviewerCity] = useState<string>('Karachi');
   const [reviewComment, setReviewComment] = useState<string>('');
   const [reviewsList, setReviewsList] = useState(SAMPLE_REVIEWS);
   const [showReviewForm, setShowReviewForm] = useState<boolean>(false);
@@ -62,6 +62,23 @@ export const ProductView: React.FC = () => {
     product.id,
     ...matchedLookProducts.map((p) => p.id)
   ]);
+
+  // Reset product state whenever selected product changes
+  useEffect(() => {
+    setActiveImageIndex(0);
+    setSelectedSize(product.sizes[0] || 'Standard');
+    setSelectedColor(product.colors[0]?.name || 'Original');
+    setIsStitched(false);
+    setQuantity(1);
+    const matched = (product.matchingProductIds && product.matchingProductIds.length > 0)
+      ? PRODUCTS.filter((p) => product.matchingProductIds?.includes(p.id))
+      : [
+          PRODUCTS.find((p) => p.department === 'footwear' && p.id !== product.id),
+          PRODUCTS.find((p) => p.department === 'bags' && p.id !== product.id),
+          PRODUCTS.find((p) => p.department === 'jewellery' && p.id !== product.id)
+        ].filter(Boolean) as typeof PRODUCTS;
+    setSelectedEnsembleIds([product.id, ...matched.map((p) => p.id)]);
+  }, [product.id]);
 
   const toggleEnsembleItem = (id: string) => {
     setSelectedEnsembleIds((prev) =>
@@ -183,6 +200,12 @@ export const ProductView: React.FC = () => {
               src={product.images[activeImageIndex] || product.images[0]}
               alt={product.title}
               referrerPolicy="no-referrer"
+              onError={(e) => {
+                const target = e.currentTarget;
+                if (target.src.includes('/src/assets/images/')) {
+                  target.src = target.src.replace('/src/assets/images/', '/images/');
+                }
+              }}
               className="w-full h-full object-cover object-center cursor-zoom-in"
               onClick={() => setIsZoomModalOpen(true)}
             />
@@ -219,6 +242,12 @@ export const ProductView: React.FC = () => {
                     src={img}
                     alt=""
                     referrerPolicy="no-referrer"
+                    onError={(e) => {
+                      const target = e.currentTarget;
+                      if (target.src.includes('/src/assets/images/')) {
+                        target.src = target.src.replace('/src/assets/images/', '/images/');
+                      }
+                    }}
                     className="w-full h-full object-cover object-top"
                   />
                 </button>
@@ -702,6 +731,12 @@ export const ProductView: React.FC = () => {
                         src={item.images[0]}
                         alt={item.title}
                         referrerPolicy="no-referrer"
+                        onError={(e) => {
+                          const target = e.currentTarget;
+                          if (target.src.includes('/src/assets/images/')) {
+                            target.src = target.src.replace('/src/assets/images/', '/images/');
+                          }
+                        }}
                         className="w-full h-full object-cover object-center"
                       />
                       <div
@@ -805,6 +840,12 @@ export const ProductView: React.FC = () => {
               src={product.images[activeImageIndex] || product.images[0]}
               alt={product.title}
               referrerPolicy="no-referrer"
+              onError={(e) => {
+                const target = e.currentTarget;
+                if (target.src.includes('/src/assets/images/')) {
+                  target.src = target.src.replace('/src/assets/images/', '/images/');
+                }
+              }}
               className="max-h-[85vh] w-auto mx-auto object-contain shadow-2xl"
             />
           </div>

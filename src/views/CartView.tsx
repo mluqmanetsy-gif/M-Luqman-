@@ -91,6 +91,12 @@ export const CartView: React.FC = () => {
                     src={item.image}
                     alt={item.title}
                     referrerPolicy="no-referrer"
+                    onError={(e) => {
+                      const target = e.currentTarget;
+                      if (target.src.includes('/src/assets/images/')) {
+                        target.src = target.src.replace('/src/assets/images/', '/images/');
+                      }
+                    }}
                     className="w-24 sm:w-28 aspect-[3/4] object-cover object-top bg-[#EEE5DF] shrink-0"
                   />
 

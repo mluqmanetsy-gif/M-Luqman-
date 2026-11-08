@@ -158,6 +158,12 @@ export const MobileBottomNav: React.FC = () => {
                       src={dept.featuredImage}
                       alt={dept.name}
                       referrerPolicy="no-referrer"
+                      onError={(e) => {
+                        const target = e.currentTarget;
+                        if (target.src.includes('/src/assets/images/')) {
+                          target.src = target.src.replace('/src/assets/images/', '/images/');
+                        }
+                      }}
                       className="w-10 h-10 object-cover object-center rounded-xs border border-white/10"
                     />
                     <div>

@@ -161,6 +161,12 @@ export const FashionCopilotModal: React.FC<{ isOpen: boolean; onClose: () => voi
                               src={product.images[0]}
                               alt={product.title}
                               referrerPolicy="no-referrer"
+                              onError={(e) => {
+                                const target = e.currentTarget;
+                                if (target.src.includes('/src/assets/images/')) {
+                                  target.src = target.src.replace('/src/assets/images/', '/images/');
+                                }
+                              }}
                               className="w-full h-24 object-cover object-center mb-1.5"
                             />
                             <h5 className="font-serif text-xs text-white line-clamp-1 font-medium">

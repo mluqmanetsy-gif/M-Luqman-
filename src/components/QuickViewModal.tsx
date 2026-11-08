@@ -18,6 +18,15 @@ export const QuickViewModal: React.FC = () => {
   const [isStitched, setIsStitched] = useState<boolean>(false);
   const [activeImageIndex, setActiveImageIndex] = useState<number>(0);
 
+  React.useEffect(() => {
+    if (quickViewProduct) {
+      setSelectedSize(quickViewProduct.sizes[0] || 'Standard');
+      setSelectedColor(quickViewProduct.colors[0]?.name || 'Original');
+      setIsStitched(false);
+      setActiveImageIndex(0);
+    }
+  }, [quickViewProduct]);
+
   if (!quickViewProduct) return null;
 
   const product = quickViewProduct;
@@ -70,6 +79,12 @@ export const QuickViewModal: React.FC = () => {
                 src={product.images[activeImageIndex] || product.images[0]}
                 alt={product.title}
                 referrerPolicy="no-referrer"
+                onError={(e) => {
+                  const target = e.currentTarget;
+                  if (target.src.includes('/src/assets/images/')) {
+                    target.src = target.src.replace('/src/assets/images/', '/images/');
+                  }
+                }}
                 className="w-full h-full object-cover object-center"
               />
             </div>
@@ -89,6 +104,12 @@ export const QuickViewModal: React.FC = () => {
                       src={img}
                       alt=""
                       referrerPolicy="no-referrer"
+                      onError={(e) => {
+                        const target = e.currentTarget;
+                        if (target.src.includes('/src/assets/images/')) {
+                          target.src = target.src.replace('/src/assets/images/', '/images/');
+                        }
+                      }}
                       className="w-full h-full object-cover object-top"
                     />
                   </button>

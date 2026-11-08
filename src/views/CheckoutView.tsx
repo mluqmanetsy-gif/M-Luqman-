@@ -409,6 +409,12 @@ export const CheckoutView: React.FC = () => {
                   src={item.image}
                   alt=""
                   referrerPolicy="no-referrer"
+                  onError={(e) => {
+                    const target = e.currentTarget;
+                    if (target.src.includes('/src/assets/images/')) {
+                      target.src = target.src.replace('/src/assets/images/', '/images/');
+                    }
+                  }}
                   className="w-12 h-14 object-cover object-top bg-[#EEE5DF] shrink-0"
                 />
                 <div className="flex-1 min-w-0">

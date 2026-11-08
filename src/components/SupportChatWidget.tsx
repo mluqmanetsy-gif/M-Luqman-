@@ -44,7 +44,7 @@ export const SupportChatWidget: React.FC = () => {
 
     // Generate smart concierge response
     setTimeout(() => {
-      let reply = 'Thank you for reaching out. A senior stylist at our Lahore atelier will assist you shortly.';
+      let reply = 'Thank you for reaching out. A senior stylist at our Karachi atelier will assist you shortly.';
       const lower = userText.toLowerCase();
 
       if (lower.includes('cash on delivery') || lower.includes('cod')) {
@@ -80,7 +80,7 @@ export const SupportChatWidget: React.FC = () => {
       {!isSupportChatOpen && (
         <button
           onClick={() => setIsSupportChatOpen(true)}
-          className="fixed bottom-6 right-6 z-40 bg-[#171513] hover:bg-[#641D32] text-white p-3.5 shadow-2xl flex items-center gap-2.5 transition-all duration-300 border border-[#B69A70]/40 group"
+          className="fixed bottom-20 right-4 sm:bottom-6 sm:right-6 z-40 bg-[#171513] hover:bg-[#641D32] text-white p-3.5 shadow-2xl flex items-center gap-2.5 transition-all duration-300 border border-[#B69A70]/40 group"
           aria-label="Open luxury concierge chat"
         >
           <div className="relative">
@@ -95,7 +95,7 @@ export const SupportChatWidget: React.FC = () => {
 
       {/* Chat Drawer Window */}
       {isSupportChatOpen && (
-        <div className="fixed bottom-6 right-6 z-50 w-[360px] sm:w-[400px] h-[520px] bg-[#F6F2EC] shadow-2xl border border-[#B69A70]/40 flex flex-col overflow-hidden animate-fadeIn">
+        <div className="fixed bottom-20 right-4 sm:bottom-6 sm:right-6 z-50 w-[340px] sm:w-[400px] h-[500px] sm:h-[520px] bg-[#F6F2EC] shadow-2xl border border-[#B69A70]/40 flex flex-col overflow-hidden animate-fadeIn">
           
           {/* Header */}
           <div className="p-4 bg-[#171513] text-[#F6F2EC] flex items-center justify-between border-b border-[#B69A70]/30">
@@ -108,10 +108,12 @@ export const SupportChatWidget: React.FC = () => {
                   <h4 className="font-serif text-sm font-semibold tracking-wide">
                     Rabia · VEYORA Concierge
                   </h4>
-                  <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                  <span className="text-[10px] uppercase tracking-wider text-[#B69A70] font-semibold">
+                    Online
+                  </span>
                 </div>
                 <span className="text-[10px] text-[#EEE5DF]/70 block">
-                  Karachi, Pakistan · Online
+                  Karachi, Pakistan
                 </span>
               </div>
             </div>

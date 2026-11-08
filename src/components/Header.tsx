@@ -201,6 +201,12 @@ export const Header: React.FC = () => {
                             src="/src/assets/images/hero_luxury_couture_1794123004357.jpg"
                             alt="Festive Heirlooms"
                             referrerPolicy="no-referrer"
+                            onError={(e) => {
+                              const target = e.currentTarget;
+                              if (target.src.includes('/src/assets/images/')) {
+                                target.src = target.src.replace('/src/assets/images/', '/images/');
+                              }
+                            }}
                             className="w-full h-full object-cover object-center"
                           />
                         </div>

@@ -260,6 +260,12 @@ export const OrderTrackingView: React.FC = () => {
                           src={it.image}
                           alt=""
                           referrerPolicy="no-referrer"
+                          onError={(e) => {
+                            const target = e.currentTarget;
+                            if (target.src.includes('/src/assets/images/')) {
+                              target.src = target.src.replace('/src/assets/images/', '/images/');
+                            }
+                          }}
                           className="w-10 h-12 object-cover object-top bg-[#EEE5DF]"
                         />
                         <div>

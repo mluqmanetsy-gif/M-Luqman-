@@ -22,8 +22,14 @@ export const AboutUsView: React.FC = () => {
       <div className="aspect-[16/9] bg-[#EEE5DF] overflow-hidden border border-[#171513]/10">
         <img
           src="/src/assets/images/hero_luxury_couture_1794123004357.jpg"
-          alt="VEYORA Atelier Lahore"
+          alt="VEYORA Atelier Karachi"
           referrerPolicy="no-referrer"
+          onError={(e) => {
+            const target = e.currentTarget;
+            if (target.src.includes('/src/assets/images/')) {
+              target.src = target.src.replace('/src/assets/images/', '/images/');
+            }
+          }}
           className="w-full h-full object-cover"
         />
       </div>
@@ -34,7 +40,7 @@ export const AboutUsView: React.FC = () => {
             The Soul of Slow Couture
           </h2>
           <p>
-            Founded with an unwavering commitment to authentic craftsmanship, VEYORA is an ode to the regal textile heritage of Pakistan. While fast-fashion churns out synthetic disposable garments, our ateliers in Lahore and Karachi uphold the patient, sacred art of hand-embroidery, pure silk weaving, and architectural tailoring.
+            Founded with an unwavering commitment to authentic craftsmanship, VEYORA is an ode to the regal textile heritage of Pakistan. While fast-fashion churns out synthetic disposable garments, our atelier in Karachi upholds the patient, sacred art of hand-embroidery, pure silk weaving, and architectural tailoring.
           </p>
         </div>
 
@@ -43,11 +49,11 @@ export const AboutUsView: React.FC = () => {
             Honoring Master Karigars
           </h2>
           <p>
-            Behind every gold zardozi motif, every delicate cutdana stitch, and every hand-pleated gharara is the mastery of our generational karigars. Many of our master craftsmen descend from royal artisan families who have practiced needlecraft in the Walled City of Lahore for decades. We ensure ethical wages, safe atelier conditions, and continuous empowerment for our artisan communities.
+            Behind every gold zardozi motif, every delicate cutdana stitch, and every hand-pleated gharara is the mastery of our generational karigars. Descending from royal artisan families who have practiced bullion needlecraft across the subcontinent for decades, our craftspeople ensure ethical wages, safe atelier conditions, and continuous empowerment for traditional craft communities.
           </p>
         </div>
 
-        <div className="p-8 bg-[#F6F2EC] border-l-2 border-[#641D32] space-y-2">
+        <div className="p-8 bg-[#F6F2EC] border border-[#171513]/10 space-y-2">
           <span className="font-serif text-lg font-semibold text-[#171513] block">
             Our Quality Manifesto
           </span>

@@ -139,6 +139,12 @@ export const CartDrawer: React.FC = () => {
                       src={item.image}
                       alt={item.title}
                       referrerPolicy="no-referrer"
+                      onError={(e) => {
+                        const target = e.currentTarget;
+                        if (target.src.includes('/src/assets/images/')) {
+                          target.src = target.src.replace('/src/assets/images/', '/images/');
+                        }
+                      }}
                       className="w-20 h-24 object-cover object-top shrink-0 bg-[#EEE5DF]"
                     />
 

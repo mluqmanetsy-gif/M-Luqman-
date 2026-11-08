@@ -282,6 +282,12 @@ export const FashionStylistModal: React.FC = () => {
                       src={curatedEnsemble.mainOutfit.images[0]}
                       alt=""
                       referrerPolicy="no-referrer"
+                      onError={(e) => {
+                        const target = e.currentTarget;
+                        if (target.src.includes('/src/assets/images/')) {
+                          target.src = target.src.replace('/src/assets/images/', '/images/');
+                        }
+                      }}
                       className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform"
                     />
                   </div>
@@ -309,6 +315,12 @@ export const FashionStylistModal: React.FC = () => {
                       src={curatedEnsemble.footwear.images[0]}
                       alt=""
                       referrerPolicy="no-referrer"
+                      onError={(e) => {
+                        const target = e.currentTarget;
+                        if (target.src.includes('/src/assets/images/')) {
+                          target.src = target.src.replace('/src/assets/images/', '/images/');
+                        }
+                      }}
                       className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform"
                     />
                   </div>
@@ -336,6 +348,12 @@ export const FashionStylistModal: React.FC = () => {
                       src={curatedEnsemble.jewellery.images[0]}
                       alt=""
                       referrerPolicy="no-referrer"
+                      onError={(e) => {
+                        const target = e.currentTarget;
+                        if (target.src.includes('/src/assets/images/')) {
+                          target.src = target.src.replace('/src/assets/images/', '/images/');
+                        }
+                      }}
                       className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform"
                     />
                   </div>
@@ -363,6 +381,12 @@ export const FashionStylistModal: React.FC = () => {
                       src={curatedEnsemble.bag.images[0]}
                       alt=""
                       referrerPolicy="no-referrer"
+                      onError={(e) => {
+                        const target = e.currentTarget;
+                        if (target.src.includes('/src/assets/images/')) {
+                          target.src = target.src.replace('/src/assets/images/', '/images/');
+                        }
+                      }}
                       className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform"
                     />
                   </div>

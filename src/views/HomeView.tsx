@@ -184,6 +184,12 @@ export const HomeView: React.FC = () => {
               src={slide.image}
               alt={slide.headline}
               referrerPolicy="no-referrer"
+              onError={(e) => {
+                const target = e.currentTarget;
+                if (target.src.includes('/src/assets/images/')) {
+                  target.src = target.src.replace('/src/assets/images/', '/images/');
+                }
+              }}
               className="w-full h-full object-cover object-top opacity-65 scale-100 hover:scale-102 transition-transform duration-1000 ease-out"
             />
             {/* Measured Scrim for WCAG AA Contrast */}
@@ -316,6 +322,12 @@ export const HomeView: React.FC = () => {
                   src={dept.featuredImage}
                   alt={dept.name}
                   referrerPolicy="no-referrer"
+                  onError={(e) => {
+                    const target = e.currentTarget;
+                    if (target.src.includes('/src/assets/images/')) {
+                      target.src = target.src.replace('/src/assets/images/', '/images/');
+                    }
+                  }}
                   className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
                 />
               </div>
@@ -450,6 +462,12 @@ export const HomeView: React.FC = () => {
                         src={item.images[0]}
                         alt={item.title}
                         referrerPolicy="no-referrer"
+                        onError={(e) => {
+                          const target = e.currentTarget;
+                          if (target.src.includes('/src/assets/images/')) {
+                            target.src = target.src.replace('/src/assets/images/', '/images/');
+                          }
+                        }}
                         className="w-full h-full object-cover object-center"
                       />
                       <div
@@ -534,6 +552,12 @@ export const HomeView: React.FC = () => {
                   src="/src/assets/images/cotton_pret_editorial_1794123005836.jpg"
                   alt="Fine Resham Embroidery Atelier"
                   referrerPolicy="no-referrer"
+                  onError={(e) => {
+                    const target = e.currentTarget;
+                    if (target.src.includes('/src/assets/images/')) {
+                      target.src = target.src.replace('/src/assets/images/', '/images/');
+                    }
+                  }}
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -542,6 +566,12 @@ export const HomeView: React.FC = () => {
                   src="/src/assets/images/luxury_jewellery_accessories_1794123005854.jpg"
                   alt="Heirloom Polki and Kundan Crafts"
                   referrerPolicy="no-referrer"
+                  onError={(e) => {
+                    const target = e.currentTarget;
+                    if (target.src.includes('/src/assets/images/')) {
+                      target.src = target.src.replace('/src/assets/images/', '/images/');
+                    }
+                  }}
                   className="w-full h-full object-cover"
                 />
               </div>

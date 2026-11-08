@@ -377,7 +377,7 @@ export const CollectionView: React.FC = () => {
         </aside>
 
         {/* Product Grid Area */}
-        <main className={`lg:col-span-${mobileFilterOpen ? '3' : '4'}`}>
+        <main className="lg:col-span-3">
           {filteredProducts.length === 0 ? (
             <div className="text-center py-20 bg-white border border-[#171513]/10 p-8 space-y-4">
               <p className="font-serif text-2xl text-[#171513]">

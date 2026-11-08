@@ -59,6 +59,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           src={product.images[0]}
           alt={product.title}
           referrerPolicy="no-referrer"
+          onError={(e) => {
+            const target = e.currentTarget;
+            if (target.src.includes('/src/assets/images/')) {
+              target.src = target.src.replace('/src/assets/images/', '/images/');
+            }
+          }}
           className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
         />
 
@@ -68,6 +74,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             src={product.images[1]}
             alt={product.title}
             referrerPolicy="no-referrer"
+            onError={(e) => {
+              const target = e.currentTarget;
+              if (target.src.includes('/src/assets/images/')) {
+                target.src = target.src.replace('/src/assets/images/', '/images/');
+              }
+            }}
             className="w-full h-full object-cover object-top absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
           />
         )}

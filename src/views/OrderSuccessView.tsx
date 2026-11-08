@@ -45,7 +45,7 @@ export const OrderSuccessView: React.FC = () => {
             Shukriya, {order.customerName.split(' ')[0]}!
           </h1>
           <p className="text-xs sm:text-sm text-[#171513]/70 max-w-lg mx-auto mt-2 leading-relaxed">
-            Your luxury order has been received at our Lahore Atelier. Our team is hand-inspecting and packaging your creations into our signature keepsake box.
+            Your luxury order has been received at our Karachi Atelier. Our team is hand-inspecting and packaging your creations into our signature keepsake box.
           </p>
         </div>
 

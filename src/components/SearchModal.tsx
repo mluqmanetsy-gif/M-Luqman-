@@ -170,6 +170,12 @@ export const SearchModal: React.FC = () => {
                         src={product.images[0]}
                         alt={product.title}
                         referrerPolicy="no-referrer"
+                        onError={(e) => {
+                          const target = e.currentTarget;
+                          if (target.src.includes('/src/assets/images/')) {
+                            target.src = target.src.replace('/src/assets/images/', '/images/');
+                          }
+                        }}
                         className="w-16 h-20 object-cover object-top shrink-0 bg-[#EEE5DF]"
                       />
                       <div className="flex flex-col justify-between flex-1 min-w-0">

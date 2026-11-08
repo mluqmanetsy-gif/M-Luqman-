@@ -77,6 +77,12 @@ export const JournalView: React.FC = () => {
                 src={activeArticle.image}
                 alt={activeArticle.title}
                 referrerPolicy="no-referrer"
+                onError={(e) => {
+                  const target = e.currentTarget;
+                  if (target.src.includes('/src/assets/images/')) {
+                    target.src = target.src.replace('/src/assets/images/', '/images/');
+                  }
+                }}
                 className="w-full h-full object-cover object-top"
               />
               <div className="absolute top-4 left-4 bg-[#171513] text-[#B69A70] text-[10px] uppercase tracking-widest font-semibold px-2.5 py-1">
@@ -139,6 +145,12 @@ export const JournalView: React.FC = () => {
                             src={prod.images[0]}
                             alt={prod.title}
                             referrerPolicy="no-referrer"
+                            onError={(e) => {
+                              const target = e.currentTarget;
+                              if (target.src.includes('/src/assets/images/')) {
+                                target.src = target.src.replace('/src/assets/images/', '/images/');
+                              }
+                            }}
                             className="w-8 h-8 object-cover rounded-xs"
                           />
                           <div>
@@ -202,6 +214,12 @@ export const JournalView: React.FC = () => {
                     src={art.image}
                     alt={art.title}
                     referrerPolicy="no-referrer"
+                    onError={(e) => {
+                      const target = e.currentTarget;
+                      if (target.src.includes('/src/assets/images/')) {
+                        target.src = target.src.replace('/src/assets/images/', '/images/');
+                      }
+                    }}
                     className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-500"
                   />
                   <span className="absolute top-2.5 left-2.5 bg-[#171513]/90 text-white text-[9px] uppercase tracking-wider font-semibold px-2 py-0.5">
