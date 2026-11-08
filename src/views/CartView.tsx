@@ -15,19 +15,12 @@ export const CartView: React.FC = () => {
   } = useShop();
 
   const [orderNotes, setOrderNotes] = useState('');
-  const [promoCode, setPromoCode] = useState('');
-  const [promoApplied, setPromoApplied] = useState(false);
 
   const discount = 0;
   const shippingCharge = 0;
   const grandTotal = cartSubtotal;
 
-  const handleApplyPromo = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (promoCode.trim().toUpperCase() === 'VEYORA10') {
-      setPromoApplied(true);
-    }
-  };
+
 
   if (cart.length === 0) {
     return (
@@ -200,27 +193,9 @@ export const CartView: React.FC = () => {
             Order Summary
           </h2>
 
-          {/* Coupon */}
-          <form onSubmit={handleApplyPromo} className="flex gap-2">
-            <input
-              type="text"
-              value={promoCode}
-              onChange={(e) => setPromoCode(e.target.value)}
-              placeholder="Voucher code (VEYORA10)"
-              className="flex-1 text-xs border border-[#171513]/20 px-3 py-2 uppercase placeholder:normal-case focus:outline-none focus:border-[#641D32]"
-            />
-            <button
-              type="submit"
-              className="px-4 py-2 bg-[#171513] text-white hover:bg-[#641D32] text-xs font-semibold uppercase tracking-wider transition-colors"
-            >
-              Apply
-            </button>
-          </form>
-          {promoApplied && (
-            <p className="text-xs text-[#1E3A2F] font-semibold">
-              ✓ Privilege voucher applied (10% VIP Discount)
-            </p>
-          )}
+          <p className="text-[11px] text-[#171513]/60">
+            Any eligible discount and final delivery charges will be confirmed by Shopify at secure checkout.
+          </p>
 
           {/* Financial Breakdown */}
           <div className="space-y-2.5 text-xs text-[#171513]/80 pt-2 border-t border-[#171513]/5">
