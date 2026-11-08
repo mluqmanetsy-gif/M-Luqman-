@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useShop } from '../context/ShopContext';
-import { PRODUCTS } from '../data/products';
 import { ProductCard } from '../components/ProductCard';
 import {
   Heart,
@@ -9,7 +8,6 @@ import {
   Truck,
   RefreshCw,
   ShieldCheck,
-  Star,
   Check,
   ZoomIn,
   X,
@@ -31,7 +29,7 @@ export const ProductView: React.FC = () => {
     products
   } = useShop();
 
-  const product = selectedProduct || PRODUCTS[0];
+  const product = selectedProduct;
 
   const [activeImageIndex, setActiveImageIndex] = useState<number>(0);
   const [selectedSize, setSelectedSize] = useState<string>(product.sizes[0] || 'Standard');
@@ -41,13 +39,6 @@ export const ProductView: React.FC = () => {
   const [isZoomModalOpen, setIsZoomModalOpen] = useState<boolean>(false);
   const [isSizeGuideOpen, setIsSizeGuideOpen] = useState<boolean>(false);
 
-  // Review form states
-  const [userRating, setUserRating] = useState<number>(5);
-  const [reviewerName, setReviewerName] = useState<string>('');
-  const [reviewerCity, setReviewerCity] = useState<string>('Karachi');
-  const [reviewComment, setReviewComment] = useState<string>('');
-  const [reviewsList, setReviewsList] = useState([] as any[]);
-  const [showReviewForm, setShowReviewForm] = useState<boolean>(false);
 
   // Complete the Look ensemble resolution
   const matchedLookProducts = (product.matchingProductIds && product.matchingProductIds.length > 0)
@@ -71,14 +62,7 @@ export const ProductView: React.FC = () => {
     setSelectedColor(product.colors[0]?.name || 'Original');
     setIsStitched(false);
     setQuantity(1);
-    const matched = (product.matchingProductIds && product.matchingProductIds.length > 0)
-      ? PRODUCTS.filter((p) => product.matchingProductIds?.includes(p.id))
-      : [
-          PRODUCTS.find((p) => p.department === 'footwear' && p.id !== product.id),
-          PRODUCTS.find((p) => p.department === 'bags' && p.id !== product.id),
-          PRODUCTS.find((p) => p.department === 'jewellery' && p.id !== product.id)
-        ].filter(Boolean) as typeof PRODUCTS;
-    setSelectedEnsembleIds([product.id, ...matched.map((p) => p.id)]);
+    setSelectedEnsembleIds([product.id, ...matchedLookProducts.map((p) => p.id)]);
   }, [product.id]);
 
   // Synchronize size if chosen from Smart Size Assistant
@@ -175,31 +159,6 @@ export const ProductView: React.FC = () => {
       navigator.clipboard.writeText(window.location.href);
       showToast('Product link copied to clipboard!');
     }
-  };
-
-  const handleAddReview = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!reviewerName.trim() || !reviewComment.trim()) {
-      showToast('Please provide your name and review remarks.', 'error');
-      return;
-    }
-
-    const newRev = {
-      id: `rev-${Date.now()}`,
-      author: reviewerName,
-      city: reviewerCity,
-      rating: userRating,
-      date: 'Just now',
-      verified: false,
-      fitFeedback: 'True to size',
-      comment: reviewComment
-    };
-
-    setReviewsList([newRev, ...reviewsList]);
-    setReviewerName('');
-    setReviewComment('');
-    setShowReviewForm(false);
-    showToast('Thank you! Your verified review has been published.');
   };
 
   const relatedProducts = products.filter((p) => p.isShopifyProduct && p.id !== product.id && p.department === product.department).slice(0, 4);
@@ -359,27 +318,7 @@ export const ProductView: React.FC = () => {
               {product.title}
             </h1>
 
-            {/* Rating Stars & City Feedback */}
-            <div className="flex items-center gap-2 mt-2">
-              <div className="flex items-center gap-0.5">
-                {[...Array(5)].map((_, i) => (
-                  <Star
-                    key={i}
-                    className={`w-3.5 h-3.5 ${
-                      i < Math.floor(product.rating)
-                        ? 'fill-[#B69A70] text-[#B69A70]'
-                        : 'text-gray-300'
-                    }`}
-                  />
-                ))}
-              </div>
-              <span className="text-xs font-mono font-semibold text-[#171513]">
-                {product.rating}
-              </span>
-              <span className="text-xs text-[#171513]/50">
-                ({product.reviewCount} verified reviews)
-              </span>
-            </div>
+            {/* Live Judge.me rating badge will be mounted here after store connection. */}
 
             {/* Price Box */}
             <div className="mt-4 pt-4 border-t border-[#171513]/10 flex items-baseline gap-3">
@@ -598,7 +537,7 @@ export const ProductView: React.FC = () => {
       <section className="bg-white p-6 sm:p-10 border border-[#171513]/10">
         <h3 className="font-serif text-2xl font-semibold text-[#171513]">Customer Reviews</h3>
         <p className="text-xs text-[#171513]/60 mt-2">
-          Customer reviews will appear here once a review service is connected.
+Reviews will appear here when genuine customer feedback is collected through Judge.me. No sample or unverified reviews are displayed.
         </p>
       </section>
 
