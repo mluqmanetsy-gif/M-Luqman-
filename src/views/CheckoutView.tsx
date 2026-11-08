@@ -13,7 +13,6 @@ export const CheckoutView: React.FC = () => {
     showToast
   } = useShop();
 
-  const [fullName, setFullName] = useState(userProfile.name);
   const [phone, setPhone] = useState(userProfile.phone);
   const [email, setEmail] = useState(userProfile.email);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -37,7 +36,7 @@ export const CheckoutView: React.FC = () => {
 
   const handleSubmitOrder = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!fullName.trim() || !phone.trim() || !email.trim()) {
+    if (!phone.trim() || !email.trim()) {
       showToast('Please complete all mandatory delivery fields.', 'error');
       return;
     }
@@ -56,7 +55,7 @@ export const CheckoutView: React.FC = () => {
             Express Checkout
           </span>
           <h1 className="font-serif text-3xl font-semibold text-[#171513]">
-            Cash on Delivery & Secure Checkout
+            Secure Shopify Checkout
           </h1>
         </div>
 
@@ -81,20 +80,6 @@ export const CheckoutView: React.FC = () => {
             </h2>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="text-xs text-[#171513] font-medium block mb-1">
-                  Full Recipient Name *
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  placeholder="e.g. Syeda Fatima Zahra"
-                  className="w-full text-xs border border-[#171513]/20 p-2.5 focus:outline-none focus:border-[#641D32]"
-                />
-              </div>
-
               <div>
                 <label className="text-xs text-[#171513] font-medium block mb-1">
                   WhatsApp / Mobile Number *
