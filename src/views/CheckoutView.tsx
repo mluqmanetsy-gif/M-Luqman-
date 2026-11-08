@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useShop } from '../context/ShopContext';
-import { PAKISTAN_CITIES, PAKISTAN_PROVINCES } from '../data/products';
-import { ShieldCheck, Truck, CreditCard, Banknote, ArrowRight, Lock, CheckCircle2 } from 'lucide-react';
+import { ShieldCheck, ArrowRight, Lock } from 'lucide-react';
 
 export const CheckoutView: React.FC = () => {
   const {
@@ -17,13 +16,6 @@ export const CheckoutView: React.FC = () => {
   const [fullName, setFullName] = useState(userProfile.name);
   const [phone, setPhone] = useState(userProfile.phone);
   const [email, setEmail] = useState(userProfile.email);
-  const [province, setProvince] = useState(userProfile.province || 'Sindh');
-  const [city, setCity] = useState(userProfile.city || 'Karachi');
-  const [address, setAddress] = useState(userProfile.address);
-  const [landmark, setLandmark] = useState('Near Ocean Mall, Clifton');
-  const [postalCode, setPostalCode] = useState('75600');
-  const [paymentMethod, setPaymentMethod] = useState<'cod' | 'bank'>('cod');
-  const [deliverySpeed, setDeliverySpeed] = useState<'standard' | 'urgent'>('standard');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   if (cart.length === 0) {
@@ -43,15 +35,9 @@ export const CheckoutView: React.FC = () => {
     );
   }
 
-  const FREE_SHIPPING_LIMIT = 5000;
-  const standardShippingCost = cartSubtotal >= FREE_SHIPPING_LIMIT ? 0 : 250;
-  const urgentShippingCost = 450;
-  const shippingTotal = deliverySpeed === 'standard' ? standardShippingCost : urgentShippingCost;
-  const grandTotal = cartSubtotal + shippingTotal;
-
   const handleSubmitOrder = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!fullName.trim() || !phone.trim() || !email.trim() || !address.trim() || !city.trim()) {
+    if (!fullName.trim() || !phone.trim() || !email.trim()) {
       showToast('Please complete all mandatory delivery fields.', 'error');
       return;
     }
@@ -142,239 +128,10 @@ export const CheckoutView: React.FC = () => {
             </div>
           </div>
 
-          {/* Pakistan Address Details */}
-          <div className="bg-white p-6 border border-[#171513]/10 space-y-4">
-            <h2 className="font-serif text-lg font-semibold text-[#171513] flex items-center gap-2">
-              <span className="w-5 h-5 rounded-full bg-[#171513] text-white text-xs flex items-center justify-center font-sans font-bold">
-                2
-              </span>
-              <span>Delivery Address in Pakistan</span>
-            </h2>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="text-xs text-[#171513] font-medium block mb-1">
-                  Province / Region *
-                </label>
-                <select
-                  value={province}
-                  onChange={(e) => setProvince(e.target.value)}
-                  className="w-full text-xs border border-[#171513]/20 p-2.5 focus:outline-none focus:border-[#641D32] bg-white"
-                >
-                  {PAKISTAN_PROVINCES.map((prov) => (
-                    <option key={prov} value={prov}>
-                      {prov}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="text-xs text-[#171513] font-medium block mb-1">
-                  Destination City *
-                </label>
-                <select
-                  value={city}
-                  onChange={(e) => setCity(e.target.value)}
-                  className="w-full text-xs border border-[#171513]/20 p-2.5 focus:outline-none focus:border-[#641D32] bg-white font-medium"
-                >
-                  {PAKISTAN_CITIES.map((c) => (
-                    <option key={c} value={c}>
-                      {c}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-            <div>
-              <label className="text-xs text-[#171513] font-medium block mb-1">
-                Complete Street Address (House #, Street, Phase/Sector) *
-              </label>
-              <textarea
-                rows={2}
-                required
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-                placeholder="e.g. Apartment 402, Block 4, Clifton, Karachi"
-                className="w-full text-xs border border-[#171513]/20 p-2.5 focus:outline-none focus:border-[#641D32]"
-              />
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="text-xs text-[#171513] font-medium block mb-1">
-                  Nearest Landmark (Optional)
-                </label>
-                <input
-                  type="text"
-                  value={landmark}
-                  onChange={(e) => setLandmark(e.target.value)}
-                  placeholder="e.g. Near Ocean Mall or Bilawal House"
-                  className="w-full text-xs border border-[#171513]/20 p-2.5 focus:outline-none focus:border-[#641D32]"
-                />
-              </div>
-
-              <div>
-                <label className="text-xs text-[#171513] font-medium block mb-1">
-                  Postal Code
-                </label>
-                <input
-                  type="text"
-                  value={postalCode}
-                  onChange={(e) => setPostalCode(e.target.value)}
-                  placeholder="75600"
-                  className="w-full text-xs border border-[#171513]/20 p-2.5 focus:outline-none focus:border-[#641D32]"
-                />
-              </div>
-            </div>
+          <div className="bg-[#F6F2EC] p-5 border border-[#171513]/10 space-y-2">
+            <h2 className="font-serif text-lg font-semibold text-[#171513]">Delivery & Payment</h2>
+            <p className="text-xs text-[#171513]/70 leading-relaxed">Your delivery address, available shipping rates and payment methods (including Cash on Delivery, if enabled) will be collected securely on Shopify checkout.</p>
           </div>
-
-          {/* Shipping Speed Option */}
-          <div className="bg-white p-6 border border-[#171513]/10 space-y-3">
-            <h2 className="font-serif text-lg font-semibold text-[#171513] flex items-center gap-2">
-              <span className="w-5 h-5 rounded-full bg-[#171513] text-white text-xs flex items-center justify-center font-sans font-bold">
-                3
-              </span>
-              <span>Delivery Method & Courier Charges</span>
-            </h2>
-
-            <div className="space-y-2.5">
-              <label
-                onClick={() => setDeliverySpeed('standard')}
-                className={`p-3.5 border flex items-center justify-between cursor-pointer transition-all ${
-                  deliverySpeed === 'standard'
-                    ? 'border-[#641D32] bg-[#F6F2EC]'
-                    : 'border-[#171513]/10 hover:border-[#171513]/30'
-                }`}
-              >
-                <div className="flex items-center gap-3">
-                  <input
-                    type="radio"
-                    name="deliverySpeed"
-                    checked={deliverySpeed === 'standard'}
-                    onChange={() => setDeliverySpeed('standard')}
-                    className="accent-[#641D32]"
-                  />
-                  <div>
-                    <span className="text-xs font-semibold text-[#171513] block">
-                      Standard Nationwide Courier (TCS / Leopard)
-                    </span>
-                    <span className="text-[11px] text-[#171513]/60">
-                      2 to 4 business days across Pakistan
-                    </span>
-                  </div>
-                </div>
-                <span className="font-mono text-xs font-bold text-[#171513]">
-                  {standardShippingCost === 0 ? 'FREE' : formatPKR(standardShippingCost)}
-                </span>
-              </label>
-
-              <label
-                onClick={() => setDeliverySpeed('urgent')}
-                className={`p-3.5 border flex items-center justify-between cursor-pointer transition-all ${
-                  deliverySpeed === 'urgent'
-                    ? 'border-[#641D32] bg-[#F6F2EC]'
-                    : 'border-[#171513]/10 hover:border-[#171513]/30'
-                }`}
-              >
-                <div className="flex items-center gap-3">
-                  <input
-                    type="radio"
-                    name="deliverySpeed"
-                    checked={deliverySpeed === 'urgent'}
-                    onChange={() => setDeliverySpeed('urgent')}
-                    className="accent-[#641D32]"
-                  />
-                  <div>
-                    <span className="text-xs font-semibold text-[#171513] block">
-                      Urgent Priority Dispatch (Same / Next Day)
-                    </span>
-                    <span className="text-[11px] text-[#171513]/60">
-                      Fast-tracked handling for Lahore, Karachi & Islamabad
-                    </span>
-                  </div>
-                </div>
-                <span className="font-mono text-xs font-bold text-[#641D32]">
-                  {formatPKR(urgentShippingCost)}
-                </span>
-              </label>
-            </div>
-          </div>
-
-          {/* Payment Method */}
-          <div className="bg-white p-6 border border-[#171513]/10 space-y-3">
-            <h2 className="font-serif text-lg font-semibold text-[#171513] flex items-center gap-2">
-              <span className="w-5 h-5 rounded-full bg-[#171513] text-white text-xs flex items-center justify-center font-sans font-bold">
-                4
-              </span>
-              <span>Payment Options</span>
-            </h2>
-
-            <div className="space-y-3">
-              {/* COD Option */}
-              <label
-                onClick={() => setPaymentMethod('cod')}
-                className={`p-4 border flex items-start justify-between cursor-pointer transition-all ${
-                  paymentMethod === 'cod'
-                    ? 'border-[#641D32] bg-[#F6F2EC]'
-                    : 'border-[#171513]/10 hover:border-[#171513]/30'
-                }`}
-              >
-                <div className="flex items-start gap-3">
-                  <input
-                    type="radio"
-                    name="paymentMethod"
-                    checked={paymentMethod === 'cod'}
-                    onChange={() => setPaymentMethod('cod')}
-                    className="mt-0.5 accent-[#641D32]"
-                  />
-                  <div>
-                    <span className="text-xs font-bold text-[#171513] flex items-center gap-1.5">
-                      <Banknote className="w-4 h-4 text-[#641D32]" />
-                      Cash on Delivery (COD) — Primary Method
-                    </span>
-                    <p className="text-[11px] text-[#171513]/70 mt-1 leading-relaxed">
-                      Pay with cash when your parcel is delivered to your doorstep. Zero advance deposit required.
-                    </p>
-                  </div>
-                </div>
-                <span className="text-[10px] uppercase font-bold text-[#1E3A2F] bg-white px-2 py-0.5 border border-[#1E3A2F]/30">
-                  Recommended
-                </span>
-              </label>
-
-              {/* Online Banking */}
-              <label
-                onClick={() => setPaymentMethod('bank')}
-                className={`p-4 border flex items-start justify-between cursor-pointer transition-all ${
-                  paymentMethod === 'bank'
-                    ? 'border-[#641D32] bg-[#F6F2EC]'
-                    : 'border-[#171513]/10 hover:border-[#171513]/30'
-                }`}
-              >
-                <div className="flex items-start gap-3">
-                  <input
-                    type="radio"
-                    name="paymentMethod"
-                    checked={paymentMethod === 'bank'}
-                    onChange={() => setPaymentMethod('bank')}
-                    className="mt-0.5 accent-[#641D32]"
-                  />
-                  <div>
-                    <span className="text-xs font-semibold text-[#171513] flex items-center gap-1.5">
-                      <CreditCard className="w-4 h-4 text-[#B69A70]" />
-                      Direct Bank Transfer / Debit Card (Meezan / HBL / Visa)
-                    </span>
-                    <p className="text-[11px] text-[#171513]/70 mt-1">
-                      Account title: VEYORA Luxury Ltd. Account details provided on next step.
-                    </p>
-                  </div>
-                </div>
-              </label>
-            </div>
-          </div>
-
         </div>
 
         {/* Right: Order Summary Sidebar (5 Cols) */}
@@ -423,24 +180,18 @@ export const CheckoutView: React.FC = () => {
             </div>
 
             <div className="flex justify-between">
-              <span>Delivery Charges to {city}</span>
-              <span className="font-mono font-semibold">
-                {shippingTotal === 0 ? (
-                  <span className="text-[#1E3A2F]">FREE</span>
-                ) : (
-                  formatPKR(shippingTotal)
-                )}
-              </span>
+              <span>Shipping & taxes</span>
+              <span className="font-mono font-semibold">Calculated at Shopify checkout</span>
             </div>
 
             <div className="pt-3 border-t border-[#171513]/10 flex justify-between items-baseline text-base font-bold text-[#171513]">
               <span className="font-serif text-lg">Total Due</span>
               <span className="font-mono text-2xl text-[#641D32]">
-                {formatPKR(grandTotal)}
+                {formatPKR(cartSubtotal)}
               </span>
             </div>
             <span className="text-[10px] text-[#171513]/60 block text-right">
-              Payment via: {paymentMethod === 'cod' ? 'Cash on Delivery' : 'Bank Transfer'}
+              Payment options shown securely by Shopify
             </span>
           </div>
 
@@ -454,7 +205,7 @@ export const CheckoutView: React.FC = () => {
               <span>Confirming Order...</span>
             ) : (
               <>
-                <span>Confirm Cash on Delivery Order</span>
+                <span>Continue to Shopify Checkout</span>
                 <ArrowRight className="w-4 h-4 text-[#B69A70]" />
               </>
             )}
