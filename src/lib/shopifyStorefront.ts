@@ -30,7 +30,7 @@ function getEndpoint() {
   if (!SHOPIFY_DOMAIN || !STOREFRONT_TOKEN) {
     throw new Error('Shopify Storefront settings are missing. Check the Vercel environment variables.');
   }
-  const domain = SHOPIFY_DOMAIN.replace(/^https?:\\/\\//, '').replace(/\\/$/, '');
+  const domain = SHOPIFY_DOMAIN.replace(/^https?:\/\//, '').replace(/\/$/, '');
   return `https://${domain}/api/${API_VERSION}/graphql.json`;
 }
 
