@@ -1,13 +1,12 @@
 import React, { useState, useMemo } from 'react';
 import { useShop } from '../context/ShopContext';
-import { PRODUCTS } from '../data/products';
 import { DEPARTMENTS } from '../data/departments';
 import { DepartmentId } from '../types';
 import { ProductCard } from '../components/ProductCard';
 import { Filter, SlidersHorizontal, Grid3X3, Grid2X2, LayoutGrid, X, Check, RotateCcw } from 'lucide-react';
 
 export const CollectionView: React.FC = () => {
-  const { selectedDepartment, selectedCategory, navigateTo, formatPKR } = useShop();
+  const { selectedDepartment, selectedCategory, navigateTo, formatPKR, products, productsLoading, productsError } = useShop();
 
   const [department, setDepartment] = useState<DepartmentId | 'all'>(selectedDepartment);
   const [category, setCategory] = useState<string>(selectedCategory || 'All');
@@ -41,7 +40,7 @@ export const CollectionView: React.FC = () => {
   const fabricsList = ['all', 'Raw Silk', 'Velvet', 'Lawn', 'Chiffon', 'Pashmina', 'Leather'];
 
   const filteredProducts = useMemo(() => {
-    return PRODUCTS.filter((p) => {
+    return products.filter((p) => {
       // Department filter
       if (department !== 'all' && p.department !== department) return false;
 
@@ -73,7 +72,7 @@ export const CollectionView: React.FC = () => {
       if (sortBy === 'newest') return (b.isNewArrival ? 1 : 0) - (a.isNewArrival ? 1 : 0);
       return 0; // featured default
     });
-  }, [department, category, maxPrice, selectedSize, selectedColor, selectedFabric, sortBy]);
+  }, [products, department, category, maxPrice, selectedSize, selectedColor, selectedFabric, sortBy]);
 
   const handleResetFilters = () => {
     setDepartment('all');
