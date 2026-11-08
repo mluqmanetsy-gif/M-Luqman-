@@ -1,0 +1,6 @@
+{
+  "name": "VEYORA — Luxury Pakistani Fashion",
+  "description": "World-class luxury Pakistani women's fashion storefront featuring bespoke couture, luxury pret, festive formals, jewellery, and fast nationwide Cash on Delivery.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
