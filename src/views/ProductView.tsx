@@ -131,15 +131,28 @@ export const ProductView: React.FC = () => {
 
   const wishlisted = isWishlisted(product.id);
 
+  const selectedShopifyVariant = product.shopifyVariants?.find((variant) =>
+    variant.availableForSale &&
+    variant.selectedOptions.every((option) =>
+      /size/i.test(option.name) ? option.value === selectedSize :
+      /color|colour/i.test(option.name) ? option.value === selectedColor : true
+    )
+  ) || product.shopifyVariants?.find((variant) => variant.availableForSale) || product.shopifyVariants?.[0];
+  const baseProductPrice = selectedShopifyVariant?.price ?? product.price;
   const unitStitchingCost = isStitched && product.stitchingAvailable ? product.stitchingPrice || 4500 : 0;
-  const unitPrice = product.price + unitStitchingCost;
+  const unitPrice = baseProductPrice + unitStitchingCost;
   const totalPrice = unitPrice * quantity;
 
   const handleAddToCart = () => {
+    if (product.isShopifyProduct && (!selectedShopifyVariant || !selectedShopifyVariant.availableForSale)) {
+      showToast('This variant is currently unavailable. Please choose another option.', 'error');
+      return;
+    }
     addToCart({
       productId: product.id,
+      shopifyVariantId: selectedShopifyVariant?.id,
       title: product.title,
-      price: product.price,
+      price: baseProductPrice,
       image: product.images[activeImageIndex] || product.images[0],
       size: selectedSize,
       color: selectedColor,
