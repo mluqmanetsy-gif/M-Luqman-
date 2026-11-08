@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Product, CartItem, Order, UserProfile, ViewType, DepartmentId } from '../types';
 import { PRODUCTS, INITIAL_ORDERS } from '../data/products';
+import { fetchStorefrontProducts, ShopifyStorefrontProduct } from '../lib/shopifyStorefront';
 
 interface ShopContextType {
   currentView: ViewType;
@@ -8,6 +9,9 @@ interface ShopContextType {
   selectedCategory: string;
   selectedProductId: string | null;
   selectedProduct: Product | null;
+  products: Product[];
+  productsLoading: boolean;
+  productsError: string | null;
   navigateTo: (
     view: ViewType,
     params?: { department?: DepartmentId | 'all'; category?: string; productId?: string }
@@ -73,6 +77,80 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [selectedDepartment, setSelectedDepartment] = useState<DepartmentId | 'all'>('all');
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [selectedProductId, setSelectedProductId] = useState<string | null>('veyora-cl-01');
+  const [liveProducts, setLiveProducts] = useState<Product[]>([]);
+  const [productsLoading, setProductsLoading] = useState<boolean>(true);
+  const [productsError, setProductsError] = useState<string | null>(null);
+
+  const mapShopifyProduct = (item: ShopifyStorefrontProduct): Product => {
+    const source = `${item.productType} ${item.tags.join(' ')} ${item.title}`.toLowerCase();
+    const department: DepartmentId =
+      /shoe|footwear|khussa|heel|sandal/.test(source) ? 'footwear' :
+      /bag|clutch|tote|handbag/.test(source) ? 'bags' :
+      /jewel|necklace|ring|bracelet|earring/.test(source) ? 'jewellery' :
+      /innerwear|bra|brief|lingerie/.test(source) ? 'innerwear' :
+      /nightwear|lounge|pajama|robe/.test(source) ? 'nightwear-loungewear' :
+      /abaya|modest|hijab/.test(source) ? 'modest-fashion' :
+      /sport|activewear|legging/.test(source) ? 'sportswear' :
+      /maternity|nursing/.test(source) ? 'maternity' :
+      /sock|hosiery|tights/.test(source) ? 'socks-hosiery' :
+      /accessor|scarf|belt|sunglass/.test(source) ? 'accessories' : 'clothing';
+    const variants = item.variants.map((variant) => ({
+      id: variant.id,
+      title: variant.title,
+      availableForSale: variant.availableForSale,
+      quantityAvailable: variant.quantityAvailable,
+      price: Number(variant.price.amount),
+      selectedOptions: variant.selectedOptions,
+    }));
+    const sizes = Array.from(new Set(variants.flatMap((variant) =>
+      variant.selectedOptions.filter((option) => /size/i.test(option.name)).map((option) => option.value)
+    )));
+    const colors = Array.from(new Set(variants.flatMap((variant) =>
+      variant.selectedOptions.filter((option) => /color|colour/i.test(option.name)).map((option) => option.value)
+    )));
+    return {
+      id: item.id,
+      title: item.title,
+      shopifyVariantId: variants[0]?.id,
+      shopifyVariants: variants,
+      isShopifyProduct: true,
+      department,
+      category: item.productType || department.replace(/-/g, ' '),
+      price: Number(item.priceRange.minVariantPrice.amount),
+      rating: 0,
+      reviewCount: 0,
+      images: item.images.map((image) => image.url),
+      colors: colors.map((name) => ({ name, hex: '#EEE5DF' })),
+      sizes: sizes.length ? sizes : ['Standard'],
+      fabric: '',
+      description: item.description,
+      features: [],
+      careInstructions: [],
+      inStock: item.availableForSale,
+      stockCount: variants.reduce((total, variant) => total + (variant.quantityAvailable || 0), 0),
+      isNewArrival: false,
+      isBestseller: false,
+      isFestive: false,
+    };
+  };
+
+  useEffect(() => {
+    let active = true;
+    fetchStorefrontProducts(100)
+      .then((items) => {
+        if (!active) return;
+        setLiveProducts(items.map(mapShopifyProduct));
+        setProductsError(null);
+      })
+      .catch((error: unknown) => {
+        if (!active) return;
+        setProductsError(error instanceof Error ? error.message : 'Unable to load Shopify products.');
+      })
+      .finally(() => {
+        if (active) setProductsLoading(false);
+      });
+    return () => { active = false; };
+  }, []);
 
   // Load cart from localStorage if present
   const [cart, setCart] = useState<CartItem[]>(() => {
@@ -292,7 +370,8 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
     showToast('Profile information updated.');
   };
 
-  const selectedProduct = PRODUCTS.find((p) => p.id === selectedProductId) || PRODUCTS[0];
+  const products = liveProducts.length ? liveProducts : PRODUCTS;
+  const selectedProduct = products.find((p) => p.id === selectedProductId) || PRODUCTS.find((p) => p.id === selectedProductId) || products[0] || PRODUCTS[0];
 
   return (
     <ShopContext.Provider
@@ -302,6 +381,9 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
         selectedCategory,
         selectedProductId,
         selectedProduct,
+        products,
+        productsLoading,
+        productsError,
         navigateTo,
 
         cart,
