@@ -27,7 +27,8 @@ export const ProductView: React.FC = () => {
     setIsSizeAssistantOpen,
     setIsStylistOpen,
     formatPKR,
-    showToast
+    showToast,
+    products
   } = useShop();
 
   const product = selectedProduct || PRODUCTS[0];
@@ -45,17 +46,17 @@ export const ProductView: React.FC = () => {
   const [reviewerName, setReviewerName] = useState<string>('');
   const [reviewerCity, setReviewerCity] = useState<string>('Karachi');
   const [reviewComment, setReviewComment] = useState<string>('');
-  const [reviewsList, setReviewsList] = useState(SAMPLE_REVIEWS);
+  const [reviewsList, setReviewsList] = useState([] as typeof SAMPLE_REVIEWS);
   const [showReviewForm, setShowReviewForm] = useState<boolean>(false);
 
   // Complete the Look ensemble resolution
   const matchedLookProducts = (product.matchingProductIds && product.matchingProductIds.length > 0)
-    ? PRODUCTS.filter((p) => product.matchingProductIds?.includes(p.id))
+    ? products.filter((p) => product.matchingProductIds?.includes(p.id) && p.isShopifyProduct)
     : [
-        PRODUCTS.find((p) => p.department === 'footwear' && p.id !== product.id),
-        PRODUCTS.find((p) => p.department === 'bags' && p.id !== product.id),
-        PRODUCTS.find((p) => p.department === 'jewellery' && p.id !== product.id)
-      ].filter(Boolean) as typeof PRODUCTS;
+        products.find((p) => p.department === 'footwear' && p.id !== product.id && p.isShopifyProduct),
+        products.find((p) => p.department === 'bags' && p.id !== product.id && p.isShopifyProduct),
+        products.find((p) => p.department === 'jewellery' && p.id !== product.id && p.isShopifyProduct)
+      ].filter(Boolean) as typeof products;
 
   const fullLookEnsemble = [product, ...matchedLookProducts];
   const [selectedEnsembleIds, setSelectedEnsembleIds] = useState<string[]>([
@@ -102,7 +103,7 @@ export const ProductView: React.FC = () => {
     .filter((item) => selectedEnsembleIds.includes(item.id))
     .reduce((sum, item) => sum + item.price, 0);
 
-  const ensembleDiscount = selectedEnsembleIds.length >= 2 ? Math.round(ensembleSubtotal * 0.1) : 0;
+  const ensembleDiscount = 0;
   const ensembleFinalTotal = ensembleSubtotal - ensembleDiscount;
 
   const handleAddEnsembleToBag = () => {
@@ -116,7 +117,8 @@ export const ProductView: React.FC = () => {
       addToCart({
         productId: item.id,
         title: item.title,
-        price: item.price,
+        price: item.shopifyVariants?.find((variant) => variant.availableForSale)?.price ?? item.price,
+        shopifyVariantId: item.shopifyVariants?.find((variant) => variant.availableForSale)?.id ?? item.shopifyVariantId,
         image: item.images[0],
         size: item.id === product.id ? selectedSize : item.sizes[0] || 'Standard',
         color: item.id === product.id ? selectedColor : item.colors[0]?.name || 'Original',
@@ -126,7 +128,7 @@ export const ProductView: React.FC = () => {
       });
     });
 
-    showToast(`Added ${itemsToAdd.length} coordinating pieces to your shopping bag with 10% bundle savings!`);
+    showToast(`Added ${itemsToAdd.length} coordinating pieces to your shopping bag to your shopping bag!`);
   };
 
   const wishlisted = isWishlisted(product.id);
@@ -188,7 +190,7 @@ export const ProductView: React.FC = () => {
       city: reviewerCity,
       rating: userRating,
       date: 'Just now',
-      verified: true,
+      verified: false,
       fitFeedback: 'True to size',
       comment: reviewComment
     };
@@ -200,7 +202,7 @@ export const ProductView: React.FC = () => {
     showToast('Thank you! Your verified review has been published.');
   };
 
-  const relatedProducts = PRODUCTS.filter((p) => p.id !== product.id && (p.department === product.department || p.isFestive)).slice(0, 4);
+  const relatedProducts = products.filter((p) => p.isShopifyProduct && p.id !== product.id && p.department === product.department).slice(0, 4);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-16">
@@ -588,10 +590,10 @@ export const ProductView: React.FC = () => {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-[#171513]/10 gap-4">
           <div>
             <h3 className="font-serif text-2xl font-semibold text-[#171513]">
-              Verified Patron Reviews ({reviewsList.length})
+              Customer Reviews ({reviewsList.length})
             </h3>
             <p className="text-xs text-[#171513]/60 mt-1">
-              Authentic feedback from women across Lahore, Karachi, Islamabad & Peshawar
+              Reviews will appear here when customer reviews are connected.
             </p>
           </div>
 
@@ -696,7 +698,7 @@ export const ProductView: React.FC = () => {
                 </div>
                 <span className="text-[10px] text-[#1E3A2F] font-semibold flex items-center gap-1">
                   <ShieldCheck className="w-3 h-3" />
-                  Verified Buyer
+                  Customer-submitted
                 </span>
               </div>
 
@@ -726,12 +728,12 @@ export const ProductView: React.FC = () => {
                 Complete the Look — Curated Ensemble
               </h3>
               <p className="text-xs sm:text-sm text-[#EEE5DF]/70 font-light mt-1">
-                Our stylists have curated matching footwear, handbag, and jewellery for {product.title}. Select pieces to bundle and save 10%.
+                Our stylists have curated matching footwear, handbag, and jewellery for {product.title}. Select coordinating pieces to build your look.
               </p>
             </div>
 
             <span className="text-xs text-[#B69A70] bg-[#B69A70]/10 border border-[#B69A70]/30 px-3 py-1 font-semibold self-start sm:self-auto">
-              Save 10% on Complete Outfit Bundles
+              Coordinating Pieces
             </span>
           </div>
 
@@ -811,7 +813,7 @@ export const ProductView: React.FC = () => {
                 </span>
                 {ensembleDiscount > 0 && (
                   <span className="text-xs text-[#B69A70] font-mono">
-                    (10% Bundle Savings: {formatPKR(ensembleDiscount)})
+                    (No bundle discount applied)
                   </span>
                 )}
               </div>
