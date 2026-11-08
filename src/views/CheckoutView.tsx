@@ -7,7 +7,7 @@ export const CheckoutView: React.FC = () => {
   const {
     cart,
     cartSubtotal,
-    placeOrder,
+    checkoutWithShopify,
     navigateTo,
     formatPKR,
     userProfile,
@@ -49,33 +49,15 @@ export const CheckoutView: React.FC = () => {
   const shippingTotal = deliverySpeed === 'standard' ? standardShippingCost : urgentShippingCost;
   const grandTotal = cartSubtotal + shippingTotal;
 
-  const handleSubmitOrder = (e: React.FormEvent) => {
+  const handleSubmitOrder = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!fullName.trim() || !phone.trim() || !address.trim() || !city.trim()) {
+    if (!fullName.trim() || !phone.trim() || !email.trim() || !address.trim() || !city.trim()) {
       showToast('Please complete all mandatory delivery fields.', 'error');
       return;
     }
-
     setIsSubmitting(true);
-
-    setTimeout(() => {
-      const createdOrder = placeOrder({
-        customerName: fullName,
-        phone,
-        city,
-        address: `${address}${landmark ? ` (Landmark: ${landmark})` : ''}${postalCode ? `, Postal Code: ${postalCode}` : ''}`,
-        items: cart,
-        subtotal: cartSubtotal,
-        shipping: shippingTotal,
-        total: grandTotal,
-        paymentMethod: paymentMethod === 'cod' ? 'Cash on Delivery (COD)' : 'Bank Transfer / Card'
-      });
-
-      setIsSubmitting(false);
-      showToast(`Order ${createdOrder.id} confirmed! Thank you.`);
-      navigateTo('order-success');
-    }, 800);
+    await checkoutWithShopify({ email, phone });
+    setIsSubmitting(false);
   };
 
   return (
