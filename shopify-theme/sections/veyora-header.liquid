@@ -42,8 +42,6 @@
     </a>
 
     <nav class="veyora-desktop-nav" aria-label="Main navigation">
-      <a class="veyora-nav-link" href="{{ section.settings.new_arrivals_url }}">{{ section.settings.new_arrivals_label | escape }}</a>
-      <a class="veyora-nav-link" href="{{ section.settings.bestsellers_url }}">{{ section.settings.bestsellers_label | escape }}</a>
       {%- if nav_menu != blank -%}
         {%- for link in nav_menu.links -%}
           {%- assign link_label = link.title | downcase -%}
@@ -91,6 +89,8 @@
           </div>
         {%- endfor -%}
       {%- endif -%}
+      <a class="veyora-nav-link" href="{{ section.settings.new_arrivals_url }}">{{ section.settings.new_arrivals_label | escape }}</a>
+      <a class="veyora-nav-link" href="{{ section.settings.bestsellers_url }}">{{ section.settings.bestsellers_label | escape }}</a>
       <a class="veyora-nav-link" href="{{ section.settings.journal_url }}">Style Journal</a>
       <a class="veyora-nav-link" href="{{ section.settings.rewards_url }}">Rewards Club</a>
       <a class="veyora-copilot-link" href="{{ section.settings.copilot_url }}">
